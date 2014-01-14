@@ -12,6 +12,10 @@
 
 Building frontend apps with small modules
 
+## Teaser
+
+ - check out [virtual DOM][13] for an example of modules.
+
 ## SOON
 
 ![soon](http://mybroadband.co.za/vb/attachment.php?s=14d95001fc1ab271beb7bfd182098ad7&attachmentid=19597&d=1348058492)
@@ -38,3 +42,5 @@ Building frontend apps with small modules
   [10]: https://david-dm.org/Raynos/frontend-framework
   [11]: https://ci.testling.com/Raynos/frontend-framework.png
   [12]: https://ci.testling.com/Raynos/frontend-framework
+
+  [13]: https://gist.github.com/Raynos/8414846
