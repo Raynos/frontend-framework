@@ -14,7 +14,11 @@ Building frontend apps with small modules
 
 ## Teaser
 
- - check out [virtual DOM][13] for an example of modules.
+ - check out [virtual DOM](https://github.com/Raynos/virtual-dom/tree/todomvc/examples/todomvc) for an example of modules.
+
+## [Modules](https://github.com/Raynos/frontend-framework/wiki/Modules)
+
+Check out the wiki page for a list of modules. Contributions welcome.
 
 ## SOON
 
@@ -42,5 +46,3 @@ Building frontend apps with small modules
   [10]: https://david-dm.org/Raynos/frontend-framework
   [11]: https://ci.testling.com/Raynos/frontend-framework.png
   [12]: https://ci.testling.com/Raynos/frontend-framework
-
-  [13]: https://gist.github.com/Raynos/8414846
