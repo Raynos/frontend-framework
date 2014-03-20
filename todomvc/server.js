@@ -10,9 +10,11 @@ var serveBrowser = ServeBrowserify({
 })
 var css = fs.readFileSync(path.join(__dirname, "style.css"))
 var img = fs.readFileSync(path.join(__dirname, "bg.png"))
+var index = fs.readFileSync(path.join(__dirname, "index.html"))
 
 http.createServer(function (req, res) {
-    if (req.url === "/browser.js") {
+    if (req.url === "/bundle.js") {
+        req.url = "/browser.js"
         serveBrowser(req, res)
     } else if (req.url === "/bg.png") {
         res.setHeader("content-type", "image/png")
@@ -22,12 +24,7 @@ http.createServer(function (req, res) {
         return res.end(css)
     } else {
         res.setHeader("content-type", "text/html")
-        res.end(
-            "<meta charset=\"utf-8\">" +
-            "<link rel=\"stylesheet\" href=\"style.css\">" +
-            "<body>" +
-            "    <script src=\"/browser.js\"></script>" +
-            "</body>")
+        res.end(index)
     }
 }).listen(8000, function () {
     console.log("listening on port 8000")

@@ -10,7 +10,7 @@ var footer = infoFooter()
 module.exports = render
 
 function render(state) {
-    return h(".todomvc-wrapper", [
+    return h("#todoapp.todomvc-wrapper", [
         h("section.todoapp", [
             partial(header, state.todoField, state.sinks),
             partial(mainSection, state.todos, state.route, state.sinks),
@@ -21,12 +21,12 @@ function render(state) {
 }
 
 function header(todoField, sinks) {
-    return h("header.header", {
+    return h("header#header.header", {
         "data-change": valueEvent(sinks.setTodoField),
         "data-submit": valueEvent(sinks.add)
     }, [
         h("h1", "Todos"),
-        h("input.new-todo", {
+        h("input#new-todo.new-todo", {
             placeholder: "What needs to be done?",
             autofocus: true,
             value: todoField,
@@ -45,14 +45,14 @@ function mainSection(todos, route, sinks) {
             route === "all"
     })
 
-    return h("section.main", { hidden: !todos.length }, [
+    return h("section#main.main", { hidden: !todos.length }, [
         h("input#toggle-all.toggle-all", {
             type: "checkbox",
             checked: allCompleted,
             "data-change": event(sinks.toggleAll)
         }),
         h("label", { htmlFor: "toggle-all" }, "Mark all as complete"),
-        h("ul.todolist", visibleTodos.map(function (todo) {
+        h("ul#todo-list.todolist", visibleTodos.map(function (todo) {
             return partial(todoItem, todo, sinks)
         }))
     ])
@@ -97,13 +97,13 @@ function statsSection(todos, route) {
         return !todo.completed
     }).length
 
-    return h("footer.footer", { hidden: !todos.length }, [
-        h("span.todo-count", [
+    return h("footer#footer.footer", { hidden: !todos.length }, [
+        h("span#todo-count.todo-count", [
             h("strong", todosLeft),
             todosLeft === 1 ? " item" : " items",
             " left"
         ]),
-        h("ul.filters", [
+        h("ul#filters.filters", [
             link("#/", "All", route === "all"),
             link("#/active", "Active", route === "active"),
             link("#/completed", "Completed", route === "completed")
@@ -118,7 +118,7 @@ function link(uri, text, isSelected) {
 }
 
 function infoFooter() {
-    return h("footer.info", [
+    return h("footer#info.info", [
         h("p", "Double-click to edit a todo"),
         h("p", [
             "Written by ",

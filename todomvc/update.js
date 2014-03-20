@@ -12,7 +12,7 @@ module.exports = {
 }
 
 function setRoute(state, route) {
-    state.route.set(route.hash)
+    state.route.set(route.substr(2) || "all")
 }
 
 function toggleAll(state) {
@@ -33,7 +33,7 @@ function setTodoField(state, data) {
 }
 
 function toggle(state, data) {
-    console.log('toggle', data.completed)
+    //console.log('toggle', data.completed)
     var item = find(state.todos, data.id)
     item.completed.set(data.completed)
 }

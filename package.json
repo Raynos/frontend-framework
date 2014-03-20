@@ -47,6 +47,7 @@
   ],
   "scripts": {
     "test": "node ./test/index.js",
+    "bundle": "browserify ./todomvc/browser.js > ./todomvc/bundle.js"
     "start": "node ./todomvc/server.js"
   },
   "testling": {

@@ -1,4 +1,5 @@
 var Delegator = require("dom-delegator")
+var window = require("global/window")
 var EventSource = require("geval/source")
 var HashRouter = require("hash-router")
 var EventSinks = require("event-sinks/geval")
@@ -19,6 +20,7 @@ function createInput() {
 
 function EventRouter() {
     var router = HashRouter()
+    window.addEventListener("hashchange", router)
 
     return EventSource(function (emit) {
         router.on("hash", emit)
