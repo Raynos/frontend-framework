@@ -1,7 +1,7 @@
 var h = require("virtual-dom/h")
-var partial = require("vdom-thunk")
-var valueEvent = require("vdom-event/value-event")
-var event = require("vdom-event/event")
+var partial = require("./lib/vdom-thunk.js")
+var valueEvent = require("./lib/vdom-event-value.js")
+var event = require("./lib/vdom-event-event.js")
 
 var doMutableFocus = require("./lib/do-mutable-focus.js")
 

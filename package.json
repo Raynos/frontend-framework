@@ -7,30 +7,45 @@
   "repository": "git://github.com/Raynos/frontend-framework.git",
   "main": "index",
   "homepage": "https://github.com/Raynos/frontend-framework",
-  "contributors": [{
-    "name": "Raynos"
-  }],
+  "contributors": [
+    {
+      "name": "Raynos"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/Raynos/frontend-framework/issues",
     "email": "raynos2@gmail.com"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "tape": "~1.0.2"
+  "dependencies": {
+    "serve-browserify": "~0.3.3",
+    "global": "~2.0.7",
+    "dom-delegator": "~4.0.1",
+    "geval": "~2.0.3",
+    "uuid": "~1.4.1",
+    "hash-router": "~0.3.4",
+    "event-sinks": "~1.0.1",
+    "xtend": "~2.1.2",
+    "observ-hash": "~1.1.1",
+    "observ-array": "~1.0.3",
+    "virtual-dom": "git://github.com/Matt-Esch/virtual-dom",
+    "array-find": "~0.1.0",
+    "array-findindex": "~0.1.0",
+    "raf": "0.0.3",
+    "semver": "~2.2.1"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "http://github.com/Raynos/frontend-framework/raw/master/LICENSE"
-  }],
+  "devDependencies": {
+    "tape": "~1.0.2",
+    "disc": "~0.5.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/Raynos/frontend-framework/raw/master/LICENSE"
+    }
+  ],
   "scripts": {
     "test": "node ./test/index.js",
-    "start": "node ./index.js",
-    "watch": "nodemon -w ./index.js index.js",
-    "travis-test": "istanbul cover ./test/index.js && ((cat coverage/lcov.info | coveralls) || exit 0)",
-    "cover": "istanbul cover --report none --print detail ./test/index.js",
-    "view-cover": "istanbul report html && google-chrome ./coverage/index.html",
-    "test-browser": "testem-browser ./test/browser/index.js",
-    "testem": "testem-both -b=./test/browser/index.js"
+    "start": "node ./todomvc/server.js"
   },
   "testling": {
     "files": "test/index.js",

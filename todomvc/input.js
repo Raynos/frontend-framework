@@ -1,7 +1,7 @@
 var Delegator = require("dom-delegator")
 var EventSource = require("geval/source")
 var HashRouter = require("hash-router")
-var EventSinks = require("event-sinks")
+var EventSinks = require("event-sinks/geval")
 
 module.exports = createInput
 

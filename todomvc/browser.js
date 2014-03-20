@@ -1,5 +1,5 @@
-var main = require("vdom-main")
-var document = require("document")
+var main = require("./lib/vdom-main")
+var document = require("global/document")
 
 var Input = require("./input.js")
 var State = require("./state.js")
@@ -16,7 +16,7 @@ function createApp() {
     var initialState = null
 
     var input = Input()
-    var state = State(input.sinks, initialState)
+    var state = State.todoApp(input.sinks, initialState)
 
     wireUpEvents(state, input.events)
 
