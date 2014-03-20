@@ -23,7 +23,7 @@ module.exports = {
 }
 
 function todoApp(sinks, initialState) {
-    var state = extend(initialState, TodoApp)
+    var state = extend(TodoApp, initialState)
 
     return hash({
         todos: array(state.todos),
@@ -34,12 +34,12 @@ function todoApp(sinks, initialState) {
 }
 
 function todoItem(item) {
-    var state = extend(item, TodoItem)
+    var state = extend(TodoItem, item)
 
     return hash({
         id: uuid(),
         title: value(state.title),
         editing: value(state.editing),
-        completed: value(state.complted)
+        completed: value(state.completed)
     })
 }

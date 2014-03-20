@@ -16,7 +16,9 @@ type Widget := {
 function partial(fn) {
     var args = [].slice.call(arguments, 1);
 
-    return new Thunk(fn, args);
+    return fn.apply(null, args)
+
+    // return new Thunk(fn, args);
 }
 
 function Thunk(fn, args) {

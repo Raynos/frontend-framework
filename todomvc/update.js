@@ -1,6 +1,3 @@
-var find = require("array-find")
-var findIndex = require("array-findindex")
-
 var State = require("./state.js")
 
 module.exports = {
@@ -36,6 +33,7 @@ function setTodoField(state, data) {
 }
 
 function toggle(state, data) {
+    console.log('toggle', data.completed)
     var item = find(state.todos, data.id)
     item.completed.set(data.completed)
 }
@@ -52,5 +50,27 @@ function destroy(state, data) {
 
 function finishEdit(state, data) {
     var item = find(state.todos, data.id)
-    item.ittle.set(data.currentValue.title)
+    item.title.set(data.currentValue.title)
+}
+
+function find(list, id) {
+    for (var i = 0; i < list.getLength(); i++) {
+        var item = list.get(i)
+        if (item.id === id) {
+            return item
+        }
+    }
+
+    return null
+}
+
+function findIndex(list, id) {
+    for (var i = 0; i < list.getLength(); i++) {
+        var item = list.get(i)
+        if (item.id === id) {
+            return i
+        }
+    }
+
+    return null
 }

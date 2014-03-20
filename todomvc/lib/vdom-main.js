@@ -44,6 +44,7 @@ function main(initialState, view, opts) {
         var newTree = view(currentState)
 
         if (opts.renderOnly) {
+            console.log('render')
             render(newTree, opts)
         } else {
             var patches = diff(tree, newTree)

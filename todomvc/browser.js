@@ -20,9 +20,17 @@ function createApp() {
 
     wireUpEvents(state, input.events)
 
-    var loop = main(state(), Render)
+    var loop = main(state(), Render, {
+        renderOnly: true,
+        onNode: function (node) {
+            console.log('onNode')
+            document.body.textContent = ""
+            document.body.appendChild(node)
+        }
+    })
 
     state(function (newState) {
+        console.log('newState', newState)
         loop.update(newState)
         // write to localStorage
     })

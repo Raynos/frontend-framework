@@ -22,8 +22,8 @@ function render(state) {
 
 function header(todoField, sinks) {
     return h("header.header", {
-        "data-submit": valueEvent(sinks.add),
-        "data-change": valueEvent(sinks.setTodoField)
+        "data-change": valueEvent(sinks.setTodoField),
+        "data-submit": valueEvent(sinks.add)
     }, [
         h("h1", "Todos"),
         h("input.new-todo", {
@@ -69,7 +69,7 @@ function todoItem(todo, sinks) {
                 checked: todo.completed,
                 "data-change": event(sinks.toggle, {
                     id: todo.id,
-                    completed: todo.completed
+                    completed: !todo.completed
                 })
             }),
             h("label", {

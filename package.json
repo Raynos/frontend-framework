@@ -19,7 +19,7 @@
   "dependencies": {
     "serve-browserify": "~0.3.3",
     "global": "~2.0.7",
-    "dom-delegator": "~4.0.1",
+    "dom-delegator": "git://github.com/Raynos/dom-delegator",
     "geval": "~2.0.3",
     "uuid": "~1.4.1",
     "hash-router": "~0.3.4",
@@ -31,7 +31,9 @@
     "array-find": "~0.1.0",
     "array-findindex": "~0.1.0",
     "raf": "0.0.3",
-    "semver": "~2.2.1"
+    "semver": "~2.2.1",
+    "form-data-set": "~0.3.2",
+    "dom-walk": "git://github.com/Raynos/dom-walk"
   },
   "devDependencies": {
     "tape": "~1.0.2",
