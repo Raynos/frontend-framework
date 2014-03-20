@@ -33,7 +33,8 @@
     "raf": "0.0.3",
     "semver": "~2.2.1",
     "form-data-set": "~0.3.2",
-    "dom-walk": "git://github.com/Raynos/dom-walk"
+    "dom-walk": "git://github.com/Raynos/dom-walk",
+    "browserify": "~3.33.0"
   },
   "devDependencies": {
     "tape": "~1.0.2",
@@ -47,7 +48,7 @@
   ],
   "scripts": {
     "test": "node ./test/index.js",
-    "bundle": "browserify ./todomvc/browser.js > ./todomvc/bundle.js"
+    "bundle": "browserify ./todomvc/browser.js > ./todomvc/bundle.js",
     "start": "node ./todomvc/server.js"
   },
   "testling": {
