@@ -27,7 +27,7 @@
     "xtend": "~2.1.2",
     "observ-hash": "~1.1.1",
     "observ-array": "~1.0.3",
-    "virtual-dom": "git://github.com/Matt-Esch/virtual-dom",
+    "virtual-dom": "git://github.com/Raynos/virtual-dom",
     "array-find": "~0.1.0",
     "array-findindex": "~0.1.0",
     "raf": "0.0.3",
