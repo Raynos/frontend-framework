@@ -49,6 +49,7 @@ function destroy(state, data) {
 
 function finishEdit(state, data) {
     var item = find(state.todos, data.id)
+    item.editing.set(false)
     item.title.set(data.currentValue.title)
 }
 

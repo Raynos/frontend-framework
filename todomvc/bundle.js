@@ -5497,7 +5497,7 @@ function todoItem(todo, sinks) {
             // custom mutable operation into the tree to be
             // invoked at patch time
             "data-focus": todo.editing ? doMutableFocus : null,
-            "data-submit": submitEvent(sinks.finishEdit, { id: todo.id }),
+            "data-event": submitEvent(sinks.finishEdit, { id: todo.id }),
             "data-blur": valueEvent(sinks.finishEdit, { id: todo.id })
         })
     ])
@@ -5641,6 +5641,7 @@ function destroy(state, data) {
 
 function finishEdit(state, data) {
     var item = find(state.todos, data.id)
+    item.editing.set(false)
     item.title.set(data.currentValue.title)
 }
 
