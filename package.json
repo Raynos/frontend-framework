@@ -29,6 +29,7 @@
     "observ-hash": "~1.1.1",
     "serve-browserify": "~0.3.3",
     "value-event": "^0.6.1",
+    "vdom-thunk": "^1.1.0",
     "virtual-dom": "git://github.com/Raynos/virtual-dom#use-data-in-patch",
     "xtend": "~2.1.2"
   },

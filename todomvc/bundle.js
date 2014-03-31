@@ -2483,7 +2483,7 @@ function main(initialState, view, opts) {
     }
 }
 
-},{"raf":36,"virtual-dom/diff":53,"virtual-dom/patch":73,"virtual-dom/render":74}],36:[function(require,module,exports){
+},{"raf":36,"virtual-dom/diff":73,"virtual-dom/patch":93,"virtual-dom/render":94}],36:[function(require,module,exports){
 module.exports = raf
 
 var EE = require('events').EventEmitter
@@ -2807,7 +2807,7 @@ function ObservHash(hash) {
     return obs
 }
 
-},{"observ":43,"xtend":79}],43:[function(require,module,exports){
+},{"observ":43,"xtend":99}],43:[function(require,module,exports){
 module.exports=require(1)
 },{}],44:[function(require,module,exports){
 var extend = require('xtend')
@@ -3083,6 +3083,51 @@ function handleEvent(ev) {
 }
 
 },{"./lib/get-form-data.js":46,"xtend":50}],53:[function(require,module,exports){
+var createElement = require("virtual-dom/render")
+var diff = require("virtual-dom/diff")
+var patch = require("virtual-dom/patch")
+
+module.exports = partial
+
+function partial(fn) {
+    var args = [].slice.call(arguments, 1)
+
+    return new Thunk(fn, args)
+}
+
+function Thunk(fn, args) {
+    this.fn = fn
+    this.args = args
+    this.vnode = null
+}
+
+Thunk.prototype.type = "immutable-thunk"
+Thunk.prototype.update = update
+Thunk.prototype.init = init
+
+function shouldUpdate(current, previous) {
+    return current.fn !== previous.fn ||
+        current.args.some(function (arg, index) {
+            return arg !== previous.args[index]
+        })
+}
+
+function update(previous, domNode) {
+    if (!shouldUpdate(this, previous)) {
+        this.vnode = previous.vnode
+        return
+    }
+
+    this.vnode = (this.vnode || this.fn.apply(null, this.args))
+    patch(domNode, diff(previous.vnode, this.vnode))
+}
+
+function init() {
+    this.vnode = this.fn.apply(null, this.args)
+    return createElement(this.vnode)
+}
+
+},{"virtual-dom/diff":54,"virtual-dom/patch":70,"virtual-dom/render":71}],54:[function(require,module,exports){
 var createPatch = require("./lib/patch-op")
 
 var isArray = require("./lib/is-array")
@@ -3249,66 +3294,7 @@ function appendPatch(apply, patch) {
     }
 }
 
-},{"./lib/is-array":56,"./lib/is-virtual-dom":58,"./lib/is-virtual-text":59,"./lib/is-widget":60,"./lib/patch-op":62}],54:[function(require,module,exports){
-var extend = require("extend")
-
-var isArray = require("./lib/is-array")
-var isString = require("./lib/is-string")
-var parseTag = require("./lib/parse-tag")
-var isVirtualDOMNode = require("./lib/is-virtual-dom")
-var isVirtualTextNode = require("./lib/is-virtual-text")
-
-var VirtualDOMNode = require("./virtual-dom-node.js")
-var VirtualTextNode = require("./virtual-text-node.js")
-
-module.exports = h
-
-function h(tagName, properties, children) {
-    var childNodes = []
-    var tag, props
-
-    if (!children) {
-        if (isChildren(properties)) {
-            children = properties
-            props = {}
-        }
-    }
-
-    props = props || extend({}, properties)
-    tag = parseTag(tagName, props)
-
-
-    if (children != null) {
-        if (isArray(children)) {
-            for (var i = 0; i < children.length; i++) {
-                addChild(children[i], childNodes)
-            }
-        } else {
-            addChild(children, childNodes)
-        }
-    }
-
-    return new VirtualDOMNode(tag, props, childNodes)
-}
-
-function addChild(c, childNodes) {
-    if (isString(c)) {
-        childNodes.push(new VirtualTextNode(c))
-    } else {
-        // For now, we push all objects regardless of type
-        childNodes.push(c)
-    }
-}
-
-function isChild(x) {
-    return isVirtualDOMNode(x) || isVirtualTextNode(x)
-}
-
-function isChildren(x) {
-    return isChild(x) || isArray(x) || isString(x)
-}
-
-},{"./lib/is-array":56,"./lib/is-string":57,"./lib/is-virtual-dom":58,"./lib/is-virtual-text":59,"./lib/parse-tag":61,"./virtual-dom-node.js":76,"./virtual-text-node.js":77,"extend":71}],55:[function(require,module,exports){
+},{"./lib/is-array":56,"./lib/is-virtual-dom":58,"./lib/is-virtual-text":59,"./lib/is-widget":60,"./lib/patch-op":61}],55:[function(require,module,exports){
 // Maps a virtual DOM tree onto a real DOM tree in an efficient manner.
 // We don't want to read all of the DOM nodes in the tree so we use
 // the in-order tree indexing to eliminate recursion down certain branches.
@@ -3428,7 +3414,7 @@ function isVirtualDomNode(x) {
     return x.type === "VirtualDOMNode" && x.version[0] === major
 }
 
-},{"../version":75}],59:[function(require,module,exports){
+},{"../version":72}],59:[function(require,module,exports){
 var version = require("../version")
 var major = version[0]
 
@@ -3442,7 +3428,7 @@ function isVirtualTextNode(x) {
     return x.type === "VirtualTextNode" && x.version[0] === major
 }
 
-},{"../version":75}],60:[function(require,module,exports){
+},{"../version":72}],60:[function(require,module,exports){
 module.exports = isWidget
 
 function isWidget(w) {
@@ -3450,59 +3436,6 @@ function isWidget(w) {
 }
 
 },{}],61:[function(require,module,exports){
-var split = require("browser-split")
-
-var classIdSplit = /([\.#]?[a-zA-Z0-9_:-]+)/
-var notClassId = /^\.|#/
-
-module.exports = parseTag
-
-function parseTag(tag, props) {
-    if (!tag) {
-        return "div"
-    }
-
-    var noId = !("id" in props)
-
-    var tagParts = split(tag, classIdSplit)
-    var tagName = null
-
-    if(notClassId.test(tagParts[1])) {
-        tagName = "div"
-    }
-
-    var classes, part, type, i
-    for (i = 0; i < tagParts.length; i++) {
-        part = tagParts[i]
-
-        if (!part) {
-            continue
-        }
-
-        type = part.charAt(0)
-
-        if (!tagName) {
-            tagName = part
-        } else if (type === ".") {
-            classes = classes || []
-            classes.push(part.substring(1, part.length))
-        } else if (type === "#" && noId) {
-            props.id = part.substring(1, part.length)
-        }
-    }
-
-    if (classes) {
-        if (props.className) {
-            classes.push(props.className)
-        }
-
-        props.className = classes.join(" ")
-    }
-
-    return tagName ? tagName.toLowerCase() : "div"
-}
-
-},{"browser-split":64}],62:[function(require,module,exports){
 var DataSet = require("data-set")
 
 var render = require("../render")
@@ -3647,7 +3580,7 @@ function destroyWidget(domNode, w) {
     }
 }
 
-},{"../render":74,"./is-string":57,"./is-virtual-dom":58,"./is-widget":60,"./update-widget":63,"data-set":66}],63:[function(require,module,exports){
+},{"../render":71,"./is-string":57,"./is-virtual-dom":58,"./is-widget":60,"./update-widget":62,"data-set":64}],62:[function(require,module,exports){
 var isWidget = require("./is-widget")
 
 module.exports = updateWidget
@@ -3663,207 +3596,19 @@ function updateWidget(a, b) {
 
     return false
 }
-},{"./is-widget":60}],64:[function(require,module,exports){
-/*!
- * Cross-Browser Split 1.1.1
- * Copyright 2007-2012 Steven Levithan <stevenlevithan.com>
- * Available under the MIT License
- * ECMAScript compliant, uniform cross-browser split method
- */
-
-/**
- * Splits a string into an array of strings using a regex or string separator. Matches of the
- * separator are not included in the result array. However, if `separator` is a regex that contains
- * capturing groups, backreferences are spliced into the result each time `separator` is matched.
- * Fixes browser bugs compared to the native `String.prototype.split` and can be used reliably
- * cross-browser.
- * @param {String} str String to split.
- * @param {RegExp|String} separator Regex or string to use for separating the string.
- * @param {Number} [limit] Maximum number of items to include in the result array.
- * @returns {Array} Array of substrings.
- * @example
- *
- * // Basic use
- * split('a b c d', ' ');
- * // -> ['a', 'b', 'c', 'd']
- *
- * // With limit
- * split('a b c d', ' ', 2);
- * // -> ['a', 'b']
- *
- * // Backreferences in result array
- * split('..word1 word2..', /([a-z]+)(\d+)/i);
- * // -> ['..', 'word', '1', ' ', 'word', '2', '..']
- */
-module.exports = (function split(undef) {
-
-  var nativeSplit = String.prototype.split,
-    compliantExecNpcg = /()??/.exec("")[1] === undef,
-    // NPCG: nonparticipating capturing group
-    self;
-
-  self = function(str, separator, limit) {
-    // If `separator` is not a regex, use `nativeSplit`
-    if (Object.prototype.toString.call(separator) !== "[object RegExp]") {
-      return nativeSplit.call(str, separator, limit);
-    }
-    var output = [],
-      flags = (separator.ignoreCase ? "i" : "") + (separator.multiline ? "m" : "") + (separator.extended ? "x" : "") + // Proposed for ES6
-      (separator.sticky ? "y" : ""),
-      // Firefox 3+
-      lastLastIndex = 0,
-      // Make `global` and avoid `lastIndex` issues by working with a copy
-      separator = new RegExp(separator.source, flags + "g"),
-      separator2, match, lastIndex, lastLength;
-    str += ""; // Type-convert
-    if (!compliantExecNpcg) {
-      // Doesn't need flags gy, but they don't hurt
-      separator2 = new RegExp("^" + separator.source + "$(?!\\s)", flags);
-    }
-    /* Values for `limit`, per the spec:
-     * If undefined: 4294967295 // Math.pow(2, 32) - 1
-     * If 0, Infinity, or NaN: 0
-     * If positive number: limit = Math.floor(limit); if (limit > 4294967295) limit -= 4294967296;
-     * If negative number: 4294967296 - Math.floor(Math.abs(limit))
-     * If other: Type-convert, then use the above rules
-     */
-    limit = limit === undef ? -1 >>> 0 : // Math.pow(2, 32) - 1
-    limit >>> 0; // ToUint32(limit)
-    while (match = separator.exec(str)) {
-      // `separator.lastIndex` is not reliable cross-browser
-      lastIndex = match.index + match[0].length;
-      if (lastIndex > lastLastIndex) {
-        output.push(str.slice(lastLastIndex, match.index));
-        // Fix browsers whose `exec` methods don't consistently return `undefined` for
-        // nonparticipating capturing groups
-        if (!compliantExecNpcg && match.length > 1) {
-          match[0].replace(separator2, function() {
-            for (var i = 1; i < arguments.length - 2; i++) {
-              if (arguments[i] === undef) {
-                match[i] = undef;
-              }
-            }
-          });
-        }
-        if (match.length > 1 && match.index < str.length) {
-          Array.prototype.push.apply(output, match.slice(1));
-        }
-        lastLength = match[0].length;
-        lastLastIndex = lastIndex;
-        if (output.length >= limit) {
-          break;
-        }
-      }
-      if (separator.lastIndex === match.index) {
-        separator.lastIndex++; // Avoid an infinite loop
-      }
-    }
-    if (lastLastIndex === str.length) {
-      if (lastLength || !separator.test("")) {
-        output.push("");
-      }
-    } else {
-      output.push(str.slice(lastLastIndex));
-    }
-    return output.length > limit ? output.slice(0, limit) : output;
-  };
-
-  return self;
-})();
-
-},{}],65:[function(require,module,exports){
+},{"./is-widget":60}],63:[function(require,module,exports){
 module.exports=require(16)
-},{}],66:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 arguments[4][17][0].apply(exports,arguments)
-},{"./create-hash.js":65,"individual":67,"weakmap-shim/create-store":69}],67:[function(require,module,exports){
+},{"./create-hash.js":63,"individual":65,"weakmap-shim/create-store":67}],65:[function(require,module,exports){
 module.exports=require(18)
-},{"global":68}],68:[function(require,module,exports){
+},{"global":66}],66:[function(require,module,exports){
 module.exports=require(19)
-},{}],69:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 module.exports=require(20)
-},{"./hidden-store.js":70}],70:[function(require,module,exports){
+},{"./hidden-store.js":68}],68:[function(require,module,exports){
 module.exports=require(21)
-},{}],71:[function(require,module,exports){
-var hasOwn = Object.prototype.hasOwnProperty;
-var toString = Object.prototype.toString;
-
-function isPlainObject(obj) {
-	if (!obj || toString.call(obj) !== '[object Object]' || obj.nodeType || obj.setInterval)
-		return false;
-
-	var has_own_constructor = hasOwn.call(obj, 'constructor');
-	var has_is_property_of_method = hasOwn.call(obj.constructor.prototype, 'isPrototypeOf');
-	// Not own constructor property must be Object
-	if (obj.constructor && !has_own_constructor && !has_is_property_of_method)
-		return false;
-
-	// Own properties are enumerated firstly, so to speed up,
-	// if last one is own, then all properties are own.
-	var key;
-	for ( key in obj ) {}
-
-	return key === undefined || hasOwn.call( obj, key );
-};
-
-module.exports = function extend() {
-	var options, name, src, copy, copyIsArray, clone,
-	    target = arguments[0] || {},
-	    i = 1,
-	    length = arguments.length,
-	    deep = false;
-
-	// Handle a deep copy situation
-	if ( typeof target === "boolean" ) {
-		deep = target;
-		target = arguments[1] || {};
-		// skip the boolean and the target
-		i = 2;
-	}
-
-	// Handle case when target is a string or something (possible in deep copy)
-	if ( typeof target !== "object" && typeof target !== "function") {
-		target = {};
-	}
-
-	for ( ; i < length; i++ ) {
-		// Only deal with non-null/undefined values
-		if ( (options = arguments[ i ]) != null ) {
-			// Extend the base object
-			for ( name in options ) {
-				src = target[ name ];
-				copy = options[ name ];
-
-				// Prevent never-ending loop
-				if ( target === copy ) {
-					continue;
-				}
-
-				// Recurse if we're merging plain objects or arrays
-				if ( deep && copy && ( isPlainObject(copy) || (copyIsArray = Array.isArray(copy)) ) ) {
-					if ( copyIsArray ) {
-						copyIsArray = false;
-						clone = src && Array.isArray(src) ? src : [];
-
-					} else {
-						clone = src && isPlainObject(src) ? src : {};
-					}
-
-					// Never move original objects, clone them
-					target[ name ] = extend( deep, clone, copy );
-
-				// Don't bring in undefined values
-				} else if ( copy !== undefined ) {
-					target[ name ] = copy;
-				}
-			}
-		}
-	}
-
-	// Return the modified object
-	return target;
-};
-
-},{}],72:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 ;(function(exports) {
 
 // export the class if we are in a Node-like system.
@@ -4872,7 +4617,7 @@ if (typeof define === 'function' && define.amd)
   semver = {}
 );
 
-},{}],73:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 var domIndex = require("./lib/dom-index")
 var isArray = require("./lib/is-array")
 
@@ -4944,7 +4689,7 @@ function patchIndices(patches) {
     return indices
 }
 
-},{"./lib/dom-index":55,"./lib/is-array":56}],74:[function(require,module,exports){
+},{"./lib/dom-index":55,"./lib/is-array":56}],71:[function(require,module,exports){
 var DataSet = require("data-set")
 
 var isVirtualDomNode = require("./lib/is-virtual-dom")
@@ -5006,12 +4751,350 @@ function applyProperties(node, props) {
     }
 }
 
-},{"./lib/is-string":57,"./lib/is-virtual-dom":58,"./lib/is-virtual-text":59,"data-set":66}],75:[function(require,module,exports){
+},{"./lib/is-string":57,"./lib/is-virtual-dom":58,"./lib/is-virtual-text":59,"data-set":64}],72:[function(require,module,exports){
 var semver = require("semver")
 
 module.exports = semver.clean("0.1.0")
 
-},{"semver":72}],76:[function(require,module,exports){
+},{"semver":69}],73:[function(require,module,exports){
+arguments[4][54][0].apply(exports,arguments)
+},{"./lib/is-array":76,"./lib/is-virtual-dom":78,"./lib/is-virtual-text":79,"./lib/is-widget":80,"./lib/patch-op":82}],74:[function(require,module,exports){
+var extend = require("extend")
+
+var isArray = require("./lib/is-array")
+var isString = require("./lib/is-string")
+var parseTag = require("./lib/parse-tag")
+var isVirtualDOMNode = require("./lib/is-virtual-dom")
+var isVirtualTextNode = require("./lib/is-virtual-text")
+
+var VirtualDOMNode = require("./virtual-dom-node.js")
+var VirtualTextNode = require("./virtual-text-node.js")
+
+module.exports = h
+
+function h(tagName, properties, children) {
+    var childNodes = []
+    var tag, props
+
+    if (!children) {
+        if (isChildren(properties)) {
+            children = properties
+            props = {}
+        }
+    }
+
+    props = props || extend({}, properties)
+    tag = parseTag(tagName, props)
+
+
+    if (children != null) {
+        if (isArray(children)) {
+            for (var i = 0; i < children.length; i++) {
+                addChild(children[i], childNodes)
+            }
+        } else {
+            addChild(children, childNodes)
+        }
+    }
+
+    return new VirtualDOMNode(tag, props, childNodes)
+}
+
+function addChild(c, childNodes) {
+    if (isString(c)) {
+        childNodes.push(new VirtualTextNode(c))
+    } else {
+        // For now, we push all objects regardless of type
+        childNodes.push(c)
+    }
+}
+
+function isChild(x) {
+    return isVirtualDOMNode(x) || isVirtualTextNode(x)
+}
+
+function isChildren(x) {
+    return isChild(x) || isArray(x) || isString(x)
+}
+
+},{"./lib/is-array":76,"./lib/is-string":77,"./lib/is-virtual-dom":78,"./lib/is-virtual-text":79,"./lib/parse-tag":81,"./virtual-dom-node.js":96,"./virtual-text-node.js":97,"extend":91}],75:[function(require,module,exports){
+module.exports=require(55)
+},{}],76:[function(require,module,exports){
+module.exports=require(56)
+},{}],77:[function(require,module,exports){
+module.exports=require(57)
+},{}],78:[function(require,module,exports){
+arguments[4][58][0].apply(exports,arguments)
+},{"../version":95}],79:[function(require,module,exports){
+arguments[4][59][0].apply(exports,arguments)
+},{"../version":95}],80:[function(require,module,exports){
+module.exports=require(60)
+},{}],81:[function(require,module,exports){
+var split = require("browser-split")
+
+var classIdSplit = /([\.#]?[a-zA-Z0-9_:-]+)/
+var notClassId = /^\.|#/
+
+module.exports = parseTag
+
+function parseTag(tag, props) {
+    if (!tag) {
+        return "div"
+    }
+
+    var noId = !("id" in props)
+
+    var tagParts = split(tag, classIdSplit)
+    var tagName = null
+
+    if(notClassId.test(tagParts[1])) {
+        tagName = "div"
+    }
+
+    var classes, part, type, i
+    for (i = 0; i < tagParts.length; i++) {
+        part = tagParts[i]
+
+        if (!part) {
+            continue
+        }
+
+        type = part.charAt(0)
+
+        if (!tagName) {
+            tagName = part
+        } else if (type === ".") {
+            classes = classes || []
+            classes.push(part.substring(1, part.length))
+        } else if (type === "#" && noId) {
+            props.id = part.substring(1, part.length)
+        }
+    }
+
+    if (classes) {
+        if (props.className) {
+            classes.push(props.className)
+        }
+
+        props.className = classes.join(" ")
+    }
+
+    return tagName ? tagName.toLowerCase() : "div"
+}
+
+},{"browser-split":84}],82:[function(require,module,exports){
+arguments[4][61][0].apply(exports,arguments)
+},{"../render":94,"./is-string":77,"./is-virtual-dom":78,"./is-widget":80,"./update-widget":83,"data-set":86}],83:[function(require,module,exports){
+module.exports=require(62)
+},{"./is-widget":80}],84:[function(require,module,exports){
+/*!
+ * Cross-Browser Split 1.1.1
+ * Copyright 2007-2012 Steven Levithan <stevenlevithan.com>
+ * Available under the MIT License
+ * ECMAScript compliant, uniform cross-browser split method
+ */
+
+/**
+ * Splits a string into an array of strings using a regex or string separator. Matches of the
+ * separator are not included in the result array. However, if `separator` is a regex that contains
+ * capturing groups, backreferences are spliced into the result each time `separator` is matched.
+ * Fixes browser bugs compared to the native `String.prototype.split` and can be used reliably
+ * cross-browser.
+ * @param {String} str String to split.
+ * @param {RegExp|String} separator Regex or string to use for separating the string.
+ * @param {Number} [limit] Maximum number of items to include in the result array.
+ * @returns {Array} Array of substrings.
+ * @example
+ *
+ * // Basic use
+ * split('a b c d', ' ');
+ * // -> ['a', 'b', 'c', 'd']
+ *
+ * // With limit
+ * split('a b c d', ' ', 2);
+ * // -> ['a', 'b']
+ *
+ * // Backreferences in result array
+ * split('..word1 word2..', /([a-z]+)(\d+)/i);
+ * // -> ['..', 'word', '1', ' ', 'word', '2', '..']
+ */
+module.exports = (function split(undef) {
+
+  var nativeSplit = String.prototype.split,
+    compliantExecNpcg = /()??/.exec("")[1] === undef,
+    // NPCG: nonparticipating capturing group
+    self;
+
+  self = function(str, separator, limit) {
+    // If `separator` is not a regex, use `nativeSplit`
+    if (Object.prototype.toString.call(separator) !== "[object RegExp]") {
+      return nativeSplit.call(str, separator, limit);
+    }
+    var output = [],
+      flags = (separator.ignoreCase ? "i" : "") + (separator.multiline ? "m" : "") + (separator.extended ? "x" : "") + // Proposed for ES6
+      (separator.sticky ? "y" : ""),
+      // Firefox 3+
+      lastLastIndex = 0,
+      // Make `global` and avoid `lastIndex` issues by working with a copy
+      separator = new RegExp(separator.source, flags + "g"),
+      separator2, match, lastIndex, lastLength;
+    str += ""; // Type-convert
+    if (!compliantExecNpcg) {
+      // Doesn't need flags gy, but they don't hurt
+      separator2 = new RegExp("^" + separator.source + "$(?!\\s)", flags);
+    }
+    /* Values for `limit`, per the spec:
+     * If undefined: 4294967295 // Math.pow(2, 32) - 1
+     * If 0, Infinity, or NaN: 0
+     * If positive number: limit = Math.floor(limit); if (limit > 4294967295) limit -= 4294967296;
+     * If negative number: 4294967296 - Math.floor(Math.abs(limit))
+     * If other: Type-convert, then use the above rules
+     */
+    limit = limit === undef ? -1 >>> 0 : // Math.pow(2, 32) - 1
+    limit >>> 0; // ToUint32(limit)
+    while (match = separator.exec(str)) {
+      // `separator.lastIndex` is not reliable cross-browser
+      lastIndex = match.index + match[0].length;
+      if (lastIndex > lastLastIndex) {
+        output.push(str.slice(lastLastIndex, match.index));
+        // Fix browsers whose `exec` methods don't consistently return `undefined` for
+        // nonparticipating capturing groups
+        if (!compliantExecNpcg && match.length > 1) {
+          match[0].replace(separator2, function() {
+            for (var i = 1; i < arguments.length - 2; i++) {
+              if (arguments[i] === undef) {
+                match[i] = undef;
+              }
+            }
+          });
+        }
+        if (match.length > 1 && match.index < str.length) {
+          Array.prototype.push.apply(output, match.slice(1));
+        }
+        lastLength = match[0].length;
+        lastLastIndex = lastIndex;
+        if (output.length >= limit) {
+          break;
+        }
+      }
+      if (separator.lastIndex === match.index) {
+        separator.lastIndex++; // Avoid an infinite loop
+      }
+    }
+    if (lastLastIndex === str.length) {
+      if (lastLength || !separator.test("")) {
+        output.push("");
+      }
+    } else {
+      output.push(str.slice(lastLastIndex));
+    }
+    return output.length > limit ? output.slice(0, limit) : output;
+  };
+
+  return self;
+})();
+
+},{}],85:[function(require,module,exports){
+module.exports=require(16)
+},{}],86:[function(require,module,exports){
+arguments[4][17][0].apply(exports,arguments)
+},{"./create-hash.js":85,"individual":87,"weakmap-shim/create-store":89}],87:[function(require,module,exports){
+module.exports=require(18)
+},{"global":88}],88:[function(require,module,exports){
+module.exports=require(19)
+},{}],89:[function(require,module,exports){
+module.exports=require(20)
+},{"./hidden-store.js":90}],90:[function(require,module,exports){
+module.exports=require(21)
+},{}],91:[function(require,module,exports){
+var hasOwn = Object.prototype.hasOwnProperty;
+var toString = Object.prototype.toString;
+
+function isPlainObject(obj) {
+	if (!obj || toString.call(obj) !== '[object Object]' || obj.nodeType || obj.setInterval)
+		return false;
+
+	var has_own_constructor = hasOwn.call(obj, 'constructor');
+	var has_is_property_of_method = hasOwn.call(obj.constructor.prototype, 'isPrototypeOf');
+	// Not own constructor property must be Object
+	if (obj.constructor && !has_own_constructor && !has_is_property_of_method)
+		return false;
+
+	// Own properties are enumerated firstly, so to speed up,
+	// if last one is own, then all properties are own.
+	var key;
+	for ( key in obj ) {}
+
+	return key === undefined || hasOwn.call( obj, key );
+};
+
+module.exports = function extend() {
+	var options, name, src, copy, copyIsArray, clone,
+	    target = arguments[0] || {},
+	    i = 1,
+	    length = arguments.length,
+	    deep = false;
+
+	// Handle a deep copy situation
+	if ( typeof target === "boolean" ) {
+		deep = target;
+		target = arguments[1] || {};
+		// skip the boolean and the target
+		i = 2;
+	}
+
+	// Handle case when target is a string or something (possible in deep copy)
+	if ( typeof target !== "object" && typeof target !== "function") {
+		target = {};
+	}
+
+	for ( ; i < length; i++ ) {
+		// Only deal with non-null/undefined values
+		if ( (options = arguments[ i ]) != null ) {
+			// Extend the base object
+			for ( name in options ) {
+				src = target[ name ];
+				copy = options[ name ];
+
+				// Prevent never-ending loop
+				if ( target === copy ) {
+					continue;
+				}
+
+				// Recurse if we're merging plain objects or arrays
+				if ( deep && copy && ( isPlainObject(copy) || (copyIsArray = Array.isArray(copy)) ) ) {
+					if ( copyIsArray ) {
+						copyIsArray = false;
+						clone = src && Array.isArray(src) ? src : [];
+
+					} else {
+						clone = src && isPlainObject(src) ? src : {};
+					}
+
+					// Never move original objects, clone them
+					target[ name ] = extend( deep, clone, copy );
+
+				// Don't bring in undefined values
+				} else if ( copy !== undefined ) {
+					target[ name ] = copy;
+				}
+			}
+		}
+	}
+
+	// Return the modified object
+	return target;
+};
+
+},{}],92:[function(require,module,exports){
+module.exports=require(69)
+},{}],93:[function(require,module,exports){
+module.exports=require(70)
+},{"./lib/dom-index":75,"./lib/is-array":76}],94:[function(require,module,exports){
+arguments[4][71][0].apply(exports,arguments)
+},{"./lib/is-string":77,"./lib/is-virtual-dom":78,"./lib/is-virtual-text":79,"data-set":86}],95:[function(require,module,exports){
+module.exports=require(72)
+},{"semver":92}],96:[function(require,module,exports){
 var version = require("./version")
 var isVDOM = require("./lib/is-virtual-dom")
 var isWidget = require("./lib/is-widget")
@@ -5068,7 +5151,7 @@ function hasWidgets(children) {
     return false
 }
 
-},{"./lib/is-virtual-dom":58,"./lib/is-widget":60,"./version":75}],77:[function(require,module,exports){
+},{"./lib/is-virtual-dom":78,"./lib/is-widget":80,"./version":95}],97:[function(require,module,exports){
 var version = require("./version")
 
 module.exports = VirtualTextNode
@@ -5080,9 +5163,9 @@ function VirtualTextNode(text) {
 VirtualTextNode.prototype.version = version.split(".")
 VirtualTextNode.prototype.type = "VirtualTextNode"
 
-},{"./version":75}],78:[function(require,module,exports){
+},{"./version":95}],98:[function(require,module,exports){
 module.exports=require(23)
-},{}],79:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 var Keys = require("object-keys")
 var hasKeys = require("./has-keys")
 
@@ -5109,7 +5192,7 @@ function extend() {
     return target
 }
 
-},{"./has-keys":78,"object-keys":81}],80:[function(require,module,exports){
+},{"./has-keys":98,"object-keys":101}],100:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -5151,11 +5234,11 @@ module.exports = function forEach(obj, fn) {
 };
 
 
-},{}],81:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 module.exports = Object.keys || require('./shim');
 
 
-},{"./shim":83}],82:[function(require,module,exports){
+},{"./shim":103}],102:[function(require,module,exports){
 var toString = Object.prototype.toString;
 
 module.exports = function isArguments(value) {
@@ -5173,7 +5256,7 @@ module.exports = function isArguments(value) {
 };
 
 
-},{}],83:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 (function () {
 	"use strict";
 
@@ -5237,7 +5320,7 @@ module.exports = function isArguments(value) {
 }());
 
 
-},{"./foreach":80,"./isArguments":82}],84:[function(require,module,exports){
+},{"./foreach":100,"./isArguments":102}],104:[function(require,module,exports){
 var mainloop = require("main-loop")
 var document = require("global/document")
 
@@ -5280,7 +5363,7 @@ function wireUpEvents(state, events) {
     events.setRoute(Update.setRoute.bind(null, state))
 }
 
-},{"./input.js":85,"./render.js":88,"./state.js":89,"./update.js":90,"global/document":29,"main-loop":35}],85:[function(require,module,exports){
+},{"./input.js":105,"./render.js":107,"./state.js":108,"./update.js":109,"global/document":29,"main-loop":35}],105:[function(require,module,exports){
 var Delegator = require("dom-delegator")
 var window = require("global/window")
 var EventSource = require("geval/source")
@@ -5310,7 +5393,7 @@ function EventRouter() {
     })
 }
 
-},{"dom-delegator":14,"event-sinks/geval":25,"geval/source":28,"global/window":30,"hash-router":31}],86:[function(require,module,exports){
+},{"dom-delegator":14,"event-sinks/geval":25,"geval/source":28,"global/window":30,"hash-router":31}],106:[function(require,module,exports){
 var document = require("global/document")
 
 module.exports = doMutableFocus
@@ -5321,59 +5404,14 @@ function doMutableFocus(node, property) {
     }
 }
 
-},{"global/document":29}],87:[function(require,module,exports){
-var createElement = require("virtual-dom/render")
-var diff = require("virtual-dom/diff")
-var patch = require("virtual-dom/patch")
-
-module.exports = partial
-
-function partial(fn) {
-    var args = [].slice.call(arguments, 1)
-
-    return new Thunk(fn, args)
-}
-
-function Thunk(fn, args) {
-    this.fn = fn
-    this.args = args
-    this.vnode = null
-}
-
-Thunk.prototype.type = "immutable-thunk"
-Thunk.prototype.update = update
-Thunk.prototype.init = init
-
-function shouldUpdate(current, previous) {
-    return current.fn !== previous.fn ||
-        current.args.some(function (arg, index) {
-            return arg !== previous.args[index]
-        })
-}
-
-function update(previous, domNode) {
-    if (!shouldUpdate(this, previous)) {
-        this.vnode = previous.vnode
-        return
-    }
-
-    this.vnode = (this.vnode || this.fn.apply(null, this.args))
-    patch(domNode, diff(previous.vnode, this.vnode))
-}
-
-function init() {
-    this.vnode = this.fn.apply(null, this.args)
-    return createElement(this.vnode)
-}
-
-},{"virtual-dom/diff":53,"virtual-dom/patch":73,"virtual-dom/render":74}],88:[function(require,module,exports){
+},{"global/document":29}],107:[function(require,module,exports){
 var h = require("virtual-dom/h")
 var submitEvent = require("value-event/submit")
 var changeEvent = require("value-event/change")
 var valueEvent = require("value-event/value")
 var event = require("value-event/event")
+var partial = require("vdom-thunk")
 
-var partial = require("./lib/thunk-partial.js")
 var doMutableFocus = require("./lib/do-mutable-focus.js")
 
 var footer = infoFooter()
@@ -5504,7 +5542,7 @@ function infoFooter() {
     ])
 }
 
-},{"./lib/do-mutable-focus.js":86,"./lib/thunk-partial.js":87,"value-event/change":44,"value-event/event":45,"value-event/submit":51,"value-event/value":52,"virtual-dom/h":54}],89:[function(require,module,exports){
+},{"./lib/do-mutable-focus.js":106,"value-event/change":44,"value-event/event":45,"value-event/submit":51,"value-event/value":52,"vdom-thunk":53,"virtual-dom/h":74}],108:[function(require,module,exports){
 var cuid = require("cuid")
 var extend = require("xtend")
 var hash = require("observ-hash")
@@ -5551,7 +5589,7 @@ function todoItem(item) {
     })
 }
 
-},{"cuid":9,"observ":1,"observ-array":39,"observ-hash":42,"xtend":79}],90:[function(require,module,exports){
+},{"cuid":9,"observ":1,"observ-array":39,"observ-hash":42,"xtend":99}],109:[function(require,module,exports){
 var State = require("./state.js")
 
 module.exports = {
@@ -5628,4 +5666,4 @@ function findIndex(list, id) {
     return null
 }
 
-},{"./state.js":89}]},{},[84])
+},{"./state.js":108}]},{},[104])

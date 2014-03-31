@@ -3,8 +3,8 @@ var submitEvent = require("value-event/submit")
 var changeEvent = require("value-event/change")
 var valueEvent = require("value-event/value")
 var event = require("value-event/event")
+var partial = require("vdom-thunk")
 
-var partial = require("./lib/thunk-partial.js")
 var doMutableFocus = require("./lib/do-mutable-focus.js")
 
 var footer = infoFooter()
