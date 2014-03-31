@@ -103,7 +103,7 @@ function statsSection(todos, route) {
 
     return h("footer#footer.footer", { hidden: !todos.length }, [
         h("span#todo-count.todo-count", [
-            h("strong", todosLeft),
+            h("strong", String(todosLeft)),
             todosLeft === 1 ? " item" : " items",
             " left"
         ]),
