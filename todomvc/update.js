@@ -33,7 +33,6 @@ function setTodoField(state, data) {
 }
 
 function toggle(state, data) {
-    //console.log('toggle', data.completed)
     var item = find(state.todos, data.id)
     item.completed.set(data.completed)
 }

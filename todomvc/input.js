@@ -8,14 +8,14 @@ module.exports = createInput
 
 function createInput() {
     var del = Delegator()
-    var events = EventSinks(del.id, [
+    var tuple = EventSinks(del.id, [
         "toggleAll", "add", "setTodoField", "toggle", "destroy",
         "startEdit", "finishEdit"
     ])
 
-    events.setRoute = EventRouter()
+    tuple.events.setRoute = EventRouter()
 
-    return { sinks: events.sinks, events: events }
+    return { sinks: tuple.sinks, events: tuple.events }
 }
 
 function EventRouter() {

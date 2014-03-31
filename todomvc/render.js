@@ -1,8 +1,10 @@
 var h = require("virtual-dom/h")
-var partial = require("./lib/vdom-thunk.js")
-var valueEvent = require("./lib/vdom-event-value.js")
-var event = require("./lib/vdom-event-event.js")
+var submitEvent = require("value-event/submit")
+var changeEvent = require("value-event/change")
+var valueEvent = require("value-event/value")
+var event = require("value-event/event")
 
+var partial = require("./lib/thunk-partial.js")
 var doMutableFocus = require("./lib/do-mutable-focus.js")
 
 var footer = infoFooter()
@@ -22,8 +24,10 @@ function render(state) {
 
 function header(todoField, sinks) {
     return h("header#header.header", {
-        "data-change": valueEvent(sinks.setTodoField),
-        "data-submit": valueEvent(sinks.add)
+        "data-event": [
+            changeEvent(sinks.setTodoField),
+            submitEvent(sinks.add)
+        ]
     }, [
         h("h1", "Todos"),
         h("input#new-todo.new-todo", {
@@ -86,7 +90,7 @@ function todoItem(todo, sinks) {
             // custom mutable operation into the tree to be
             // invoked at patch time
             "data-focus": todo.editing ? doMutableFocus : null,
-            "data-submit": valueEvent(sinks.finishEdit, { id: todo.id }),
+            "data-submit": submitEvent(sinks.finishEdit, { id: todo.id }),
             "data-blur": valueEvent(sinks.finishEdit, { id: todo.id })
         })
     ])

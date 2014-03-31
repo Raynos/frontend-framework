@@ -1,4 +1,4 @@
-var main = require("./lib/vdom-main")
+var mainloop = require("main-loop")
 var document = require("global/document")
 
 var Input = require("./input.js")
@@ -20,19 +20,10 @@ function createApp() {
 
     wireUpEvents(state, input.events)
 
-    var loop = main(state(), Render, {
-        renderOnly: true,
-        onNode: function (node) {
-            console.log('onNode')
-            document.body.textContent = ""
-            document.body.appendChild(node)
-        }
-    })
+    var loop = mainloop(state(), Render)
 
     state(function (newState) {
-        console.log('newState', newState)
         loop.update(newState)
-        // write to localStorage
     })
 
     return loop.target

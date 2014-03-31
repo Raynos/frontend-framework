@@ -1,4 +1,4 @@
-var uuid = require("uuid")
+var cuid = require("cuid")
 var extend = require("xtend")
 var hash = require("observ-hash")
 var array = require("observ-array")
@@ -37,7 +37,7 @@ function todoItem(item) {
     var state = extend(TodoItem, item)
 
     return hash({
-        id: uuid(),
+        id: cuid(),
         title: value(state.title),
         editing: value(state.editing),
         completed: value(state.completed)
