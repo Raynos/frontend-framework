@@ -1,35 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports = Observable
-
-function Observable(value) {
-    var listeners = []
-    value = value === undefined ? null : value
-
-    observable.set = function (v) {
-        value = v
-        listeners.forEach(function (f) {
-            f(v)
-        })
-    }
-
-    return observable
-
-    function observable(listener) {
-        if (!listener) {
-            return value
-        }
-
-        listeners.push(listener)
-
-        return function remove() {
-            listeners.splice(listeners.indexOf(listener), 1)
-        }
-    }
-}
 
 },{}],2:[function(require,module,exports){
-
-},{}],3:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -331,7 +302,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (global){
 /*! http://mths.be/punycode v1.2.4 by @mathias */
 ;(function(root) {
@@ -842,7 +813,7 @@ function isUndefined(arg) {
 }(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -928,7 +899,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -1015,13 +986,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":5,"./encode":6}],8:[function(require,module,exports){
+},{"./decode":4,"./encode":5}],7:[function(require,module,exports){
 /*jshint strict:true node:true es5:true onevar:true laxcomma:true laxbreak:true eqeqeq:true immed:true latedef:true*/
 (function () {
   "use strict";
@@ -1654,7 +1625,7 @@ function parseHost(host) {
 
 }());
 
-},{"punycode":4,"querystring":7}],9:[function(require,module,exports){
+},{"punycode":3,"querystring":6}],8:[function(require,module,exports){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -1763,7 +1734,53 @@ function parseHost(host) {
 
 }(this.applitude || this));
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+if (typeof document !== "undefined") {
+    module.exports = document
+} else {
+    module.exports = require("min-document")
+}
+
+},{"min-document":1}],10:[function(require,module,exports){
+(function (global){
+if (typeof window !== "undefined") {
+    module.exports = window
+} else if (typeof global !== "undefined") {
+    module.exports = global
+} else {
+    module.exports = {}
+}
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],11:[function(require,module,exports){
+module.exports = {
+    // Entry
+    main: require("main-loop"),
+
+    // Input
+    Delegator: require("dom-delegator"),
+    EventSinks: require("event-sinks/geval"),
+    Event: require("geval"),
+    HashRouter: require("hash-router"),
+    event: require("value-event/event"),
+    valueEvent: require("value-event/value"),
+    submitEvent: require("value-event/submit"),
+    changeEvent: require("value-event/change"),
+
+    // State
+    array: require("observ-array"),
+    hash: require("observ-hash"),
+    value: require("observ"),
+
+    // Render
+    diff: require("virtual-dom/diff"),
+    patch: require("virtual-dom/patch"),
+    partial: require("vdom-thunk"),
+    create: require("virtual-dom/create-element"),
+    h: require("virtual-dom/h")
+}
+
+},{"dom-delegator":16,"event-sinks/geval":27,"geval":30,"hash-router":31,"main-loop":35,"observ":61,"observ-array":58,"observ-hash":60,"value-event/change":62,"value-event/event":63,"value-event/submit":69,"value-event/value":70,"vdom-thunk":71,"virtual-dom/create-element":91,"virtual-dom/diff":92,"virtual-dom/h":93,"virtual-dom/patch":112}],12:[function(require,module,exports){
 var DataSet = require("data-set")
 
 module.exports = addEvent
@@ -1779,7 +1796,7 @@ function addEvent(id, target, type, handler) {
     ds[type] = events
 }
 
-},{"data-set":17}],11:[function(require,module,exports){
+},{"data-set":19}],13:[function(require,module,exports){
 var cuid = require("cuid")
 
 var addEvent = require("./add-event.js")
@@ -1824,7 +1841,7 @@ function createDelegator(surface) {
     }
 }
 
-},{"./add-event.js":10,"./listen.js":15,"cuid":9}],12:[function(require,module,exports){
+},{"./add-event.js":12,"./listen.js":17,"cuid":8}],14:[function(require,module,exports){
 var document = require("global/document")
 
 var allEvents = [
@@ -1854,7 +1871,7 @@ function getParent(target) {
     return target.parentNode
 }
 
-},{"global/document":22}],13:[function(require,module,exports){
+},{"global/document":24}],15:[function(require,module,exports){
 var DataSet = require("data-set")
 
 module.exports = getListener
@@ -1903,13 +1920,13 @@ function Listener(target, handlers) {
     this.handlers = handlers
 }
 
-},{"data-set":17}],14:[function(require,module,exports){
+},{"data-set":19}],16:[function(require,module,exports){
 var DOMSurface = require("./dom-surface.js")
 var createDelegator = require("./create-delegator.js")
 
 module.exports = createDelegator(DOMSurface)
 
-},{"./create-delegator.js":11,"./dom-surface.js":12}],15:[function(require,module,exports){
+},{"./create-delegator.js":13,"./dom-surface.js":14}],17:[function(require,module,exports){
 var extend = require("xtend")
 
 var getListener = require("./get-listener.js")
@@ -1936,7 +1953,7 @@ function listen(delegator, surface, eventName) {
     })
 }
 
-},{"./get-listener.js":13,"xtend":24}],16:[function(require,module,exports){
+},{"./get-listener.js":15,"xtend":26}],18:[function(require,module,exports){
 module.exports = createHash
 
 function createHash(elem) {
@@ -1960,7 +1977,7 @@ function createHash(elem) {
     return hash
 }
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var createStore = require("weakmap-shim/create-store")
 var Individual = require("individual")
 
@@ -1980,7 +1997,7 @@ function DataSet(elem) {
     return store.hash
 }
 
-},{"./create-hash.js":16,"individual":18,"weakmap-shim/create-store":20}],18:[function(require,module,exports){
+},{"./create-hash.js":18,"individual":20,"weakmap-shim/create-store":22}],20:[function(require,module,exports){
 var root = require("global")
 
 module.exports = Individual
@@ -1998,7 +2015,7 @@ function Individual(key, value) {
     return value
 }
 
-},{"global":19}],19:[function(require,module,exports){
+},{"global":21}],21:[function(require,module,exports){
 (function (global){
 /*global window, global*/
 if (typeof global !== "undefined") {
@@ -2008,7 +2025,7 @@ if (typeof global !== "undefined") {
 }
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var hiddenStore = require('./hidden-store.js');
 
 module.exports = createStore;
@@ -2027,7 +2044,7 @@ function createStore() {
     };
 }
 
-},{"./hidden-store.js":21}],21:[function(require,module,exports){
+},{"./hidden-store.js":23}],23:[function(require,module,exports){
 module.exports = hiddenStore;
 
 function hiddenStore(obj, key) {
@@ -2045,14 +2062,14 @@ function hiddenStore(obj, key) {
     return store;
 }
 
-},{}],22:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 if (typeof document !== "undefined") {
     module.exports = document;
 } else {
     module.exports = require("min-document");
 }
 
-},{"min-document":2}],23:[function(require,module,exports){
+},{"min-document":1}],25:[function(require,module,exports){
 module.exports = hasKeys
 
 function hasKeys(source) {
@@ -2061,7 +2078,7 @@ function hasKeys(source) {
         typeof source === "function")
 }
 
-},{}],24:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 var hasKeys = require("./has-keys")
 
 module.exports = extend
@@ -2086,7 +2103,7 @@ function extend() {
     return target
 }
 
-},{"./has-keys":23}],25:[function(require,module,exports){
+},{"./has-keys":25}],27:[function(require,module,exports){
 var GevalEvent = require("geval/event")
 
 var Sink = require("./sink.js")
@@ -2112,7 +2129,7 @@ function EventSinks(id, names) {
     return { events: sources, sinks: sinks }
 }
 
-},{"./sink.js":26,"geval/event":27}],26:[function(require,module,exports){
+},{"./sink.js":28,"geval/event":29}],28:[function(require,module,exports){
 module.exports = Sink
 
 function Sink(write, id, key) {
@@ -2125,7 +2142,7 @@ function Sink(write, id, key) {
     this.write = write
 }
 
-},{}],27:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 module.exports = Event
 
 function Event() {
@@ -2153,7 +2170,7 @@ function Event() {
     }
 }
 
-},{}],28:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var Event = require('./event.js')
 
 module.exports = Source
@@ -2166,25 +2183,7 @@ function Source(broadcaster) {
     return tuple.listen
 }
 
-},{"./event.js":27}],29:[function(require,module,exports){
-if (typeof document !== "undefined") {
-    module.exports = document
-} else {
-    module.exports = require("min-document")
-}
-
-},{"min-document":2}],30:[function(require,module,exports){
-(function (global){
-if (typeof window !== "undefined") {
-    module.exports = window
-} else if (typeof global !== "undefined") {
-    module.exports = global
-} else {
-    module.exports = {}
-}
-
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],31:[function(require,module,exports){
+},{"./event.js":29}],31:[function(require,module,exports){
 var Router = require("routes")
 var url = require("url")
 var location = require("global/document").location
@@ -2250,7 +2249,7 @@ function defaultGetRoute() {
     return location.hash || "#/"
 }
 
-},{"events":3,"global/document":29,"routes":32,"url":8,"xtend/mutable":34}],32:[function(require,module,exports){
+},{"events":2,"global/document":9,"routes":32,"url":7,"xtend/mutable":34}],32:[function(require,module,exports){
 
 var localRoutes = [];
 
@@ -2401,7 +2400,7 @@ Router.Router = Router
 module.exports = Router
 
 },{}],33:[function(require,module,exports){
-module.exports=require(23)
+module.exports=require(25)
 },{}],34:[function(require,module,exports){
 var hasKeys = require("./has-keys")
 
@@ -2425,7 +2424,7 @@ function extend(target) {
 
 },{"./has-keys":33}],35:[function(require,module,exports){
 var raf = require("raf").polyfill
-var vdomCreate = require("virtual-dom/render")
+var vdomCreate = require("virtual-dom/create-element")
 var vdomDiff = require("virtual-dom/diff")
 var vdomPatch = require("virtual-dom/patch")
 
@@ -2483,7 +2482,7 @@ function main(initialState, view, opts) {
     }
 }
 
-},{"raf":36,"virtual-dom/diff":73,"virtual-dom/patch":93,"virtual-dom/render":94}],36:[function(require,module,exports){
+},{"raf":36,"virtual-dom/create-element":37,"virtual-dom/diff":38,"virtual-dom/patch":54}],36:[function(require,module,exports){
 module.exports = raf
 
 var EE = require('events').EventEmitter
@@ -2547,587 +2546,69 @@ raf.polyfill = _raf
 raf.now = now
 
 
-},{"events":3}],37:[function(require,module,exports){
-module.exports = addListener
+},{"events":2}],37:[function(require,module,exports){
+var DataSet = require("data-set")
 
-function addListener(observArray, observ) {
-    var list = observArray._list
+var isVirtualDomNode = require("./lib/is-virtual-dom")
+var isVirtualTextNode = require("./lib/is-virtual-text")
+var isString = require("./lib/is-string")
 
-    return observ(function (value) {
-        var valueList =  observArray().slice()
-        var index = list.indexOf(observ)
+module.exports = render
 
-        // This code path should never hit. If this happens
-        // there's a bug in the cleanup code
-        if (index === -1) {
-            var message = "observ-array: Unremoved observ listener"
-            var err = new Error(message)
-            err.list = list
-            err.index = index
-            err.observ = observ
-            throw err
+function render(virtualDom, opts) {
+    var doc = opts ? opts.document || document : document
+    var warn = opts ? opts.warn : null
+
+    if (virtualDom && typeof virtualDom.init === "function") {
+        return virtualDom.init()
+    } else if (isVirtualTextNode(virtualDom)) {
+        return doc.createTextNode(virtualDom.text)
+    } else if (isString(virtualDom)) {
+        return doc.createTextNode(virtualDom)
+    } else if (!isVirtualDomNode(virtualDom)) {
+        if (warn) {
+            warn("Item is not a valid virtual dom node", virtualDom)
         }
-
-        valueList.splice(index, 1, value)
-        valueList._diff = [index, 1, value]
-
-        observArray.set(valueList)
-    })
-}
-
-},{}],38:[function(require,module,exports){
-var ObservArray = require("./index.js")
-
-var slice = Array.prototype.slice
-
-var ARRAY_METHODS = [
-    "concat", "slice", "every", "filter", "forEach", "indexOf",
-    "join", "lastIndexOf", "map", "reduce", "reduceRight",
-    "some", "toString", "toLocaleString"
-]
-
-var methods = ARRAY_METHODS.map(function (name) {
-    return [name, function () {
-        var res = this._list[name].apply(this._list, arguments)
-
-        if (res && Array.isArray(res)) {
-            res = ObservArray(res)
-        }
-
-        return res
-    }]
-})
-
-module.exports = ArrayMethods
-
-function ArrayMethods(obs) {
-    obs.push = observArrayPush
-    obs.pop = observArrayPop
-    obs.shift = observArrayShift
-    obs.unshift = observArrayUnshift
-    obs.reverse = notImplemented
-    obs.sort = notImplemented
-
-    methods.forEach(function (tuple) {
-        obs[tuple[0]] = tuple[1]
-    })
-    return obs
-}
-
-
-
-function observArrayPush() {
-    var args = slice.call(arguments)
-    args.unshift(this._list.length, 0)
-    this.splice.apply(this, args)
-
-    return this._list.length
-}
-function observArrayPop() {
-    return this.splice(this._list.length - 1, 1)[0]
-}
-function observArrayShift() {
-    return this.splice(0, 1)[0]
-}
-function observArrayUnshift() {
-    var args = slice.call(arguments)
-    args.unshift(0, 0)
-    this.splice.apply(this, args)
-
-    return this._list.length
-}
-
-
-function notImplemented() {
-    throw new Error("Pull request welcome")
-}
-
-},{"./index.js":39}],39:[function(require,module,exports){
-var Observ = require("observ")
-
-// circular dep between ArrayMethods & this file
-module.exports = ObservArray
-
-var splice = require("./splice.js")
-var ArrayMethods = require("./array-methods.js")
-var addListener = require("./add-listener.js")
-
-/*  ObservArray := (Array<T>) => Observ<
-        Array<T> & { _diff: Array }
-    > & {
-        splice: (index: Number, amount: Number, rest...: T) =>
-            Array<T>,
-        push: (values...: T) => Number,
-        filter: (lambda: Function, thisValue: Any) => Array<T>,
-        indexOf: (item: T, fromIndex: Number) => Number
+        return null
     }
 
-    Fix to make it more like ObservHash.
+    var node = doc.createElement(virtualDom.tagName)
+    applyProperties(node, virtualDom.properties)
+    var children = virtualDom.children
 
-    I.e. you write observables into it. 
-        reading methods take plain JS objects to read
-        and the value of the array is always an array of plain
-        objsect.
-
-        The observ array instance itself would have indexed 
-        properties that are the observables
-*/
-function ObservArray(initialList) {
-    // list is the internal mutable list observ instances that
-    // all methods on `obs` dispatch to.
-    var list = initialList
-    var initialState = []
-
-    // copy state out of initialList into initialState
-    list.forEach(function (observ, index) {
-        initialState[index] = typeof observ === "function" ?
-            observ() : observ
-    })
-
-    var obs = Observ(initialState)
-    obs.splice = splice
-
-    obs.get = get
-    obs.getLength = getLength
-
-    // you better not mutate this list directly
-    // this is the list of observs instances
-    obs._list = list
-
-    var removeListeners = list.map(function (observ) {
-        return typeof observ === "function" ?
-            addListener(obs, observ) :
-            null
-    });
-    // this is a list of removal functions that must be called
-    // when observ instances are removed from `obs.list`
-    // not calling this means we do not GC our observ change
-    // listeners. Which causes rage bugs
-    obs._removeListeners = removeListeners
-
-    return ArrayMethods(obs, list)
-}
-
-function get(index) {
-    return this._list[index]
-}
-
-function getLength() {
-    return this._list.length
-}
-
-},{"./add-listener.js":37,"./array-methods.js":38,"./splice.js":41,"observ":40}],40:[function(require,module,exports){
-module.exports=require(1)
-},{}],41:[function(require,module,exports){
-var slice = Array.prototype.slice
-
-var addListener = require("./add-listener.js")
-
-module.exports = splice
-
-// `obs.splice` is a mutable implementation of `splice()`
-// that mutates both `list` and the internal `valueList` that
-// is the current value of `obs` itself
-function splice(index, amount) {
-    var obs = this
-    var args = slice.call(arguments, 0)
-    var valueList = obs().slice()
-
-    // generate a list of args to mutate the internal
-    // list of only obs
-    var valueArgs = args.map(function (value, index) {
-        if (index === 0 || index === 1) {
-            return value
-        }
-
-        // must unpack observables that we are adding
-        return typeof value === "function" ? value() : value
-    })
-
-    valueList.splice.apply(valueList, valueArgs)
-    // we remove the observs that we remove
-    var removed = obs._list.splice.apply(obs._list, args)
-
-    var extraRemoveListeners = args.slice(2).map(function (observ) {
-        return typeof observ === "function" ?
-            addListener(obs, observ) :
-            null
-    })
-    extraRemoveListeners.unshift(args[0], args[1])
-    var removedListeners = obs._removeListeners.splice
-        .apply(obs._removeListeners, extraRemoveListeners)
-
-    removedListeners.forEach(function (removeObservListener) {
-        if (removeObservListener) {
-            removeObservListener()
-        }
-    })
-
-    valueList._diff = valueArgs
-
-    obs.set(valueList)
-    return removed
-}
-
-},{"./add-listener.js":37}],42:[function(require,module,exports){
-var Observ = require("observ")
-var extend = require("xtend")
-
-/* ObservHash := (Object<String, Observ<T>>) => 
-    Object<String, Observ<T>> & Observ<Object<String, T>>
-
-*/
-module.exports = ObservHash
-
-function ObservHash(hash) {
-    var keys = Object.keys(hash)
-
-    var initialState = {}
-
-    keys.forEach(function (key) {
-        var observ = hash[key]
-        initialState[key] = typeof observ === "function" ?
-            observ() : observ
-    })
-
-    var obs = Observ(initialState)
-    keys.forEach(function (key) {
-        var observ = hash[key]
-        obs[key] = observ
-
-        if (typeof observ === "function") {
-            observ(function (value) {
-                var state = extend(obs())
-                state[key] = value
-                obs.set(state)
-            })
-        }
-    })
-
-    return obs
-}
-
-},{"observ":43,"xtend":99}],43:[function(require,module,exports){
-module.exports=require(1)
-},{}],44:[function(require,module,exports){
-var extend = require('xtend')
-
-var getFormData = require('./lib/get-form-data.js')
-
-module.exports = ChangeSinkHandler
-
-function ChangeSinkHandler(sink, data) {
-    if (!(this instanceof ChangeSinkHandler)) {
-        return new ChangeSinkHandler(sink, data)
-    }
-
-    this.sink = sink
-    this.data = data
-    this.type = 'change'
-    this.id = sink.id
-}
-
-ChangeSinkHandler.prototype.handleEvent = handleEvent
-
-function handleEvent(ev) {
-    var target = ev.target
-
-    var isValid =
-        (ev.type === 'change' && target.type === 'checkbox') ||
-        (ev.type === 'keyup' && target.type === 'text')
-
-    if (!isValid) {
-        return
-    }
-
-    var value = getFormData(ev.currentTarget)
-    var data = extend(this.data, { currentValue: value })
-
-    if (typeof this.sink === 'function') {
-        this.sink(data)
-    } else {
-        this.sink.write(data)
-    }
-}
-
-},{"./lib/get-form-data.js":46,"xtend":50}],45:[function(require,module,exports){
-module.exports = SinkEventHandler
-
-function SinkEventHandler(sink, data) {
-    if (!(this instanceof SinkEventHandler)) {
-        return new SinkEventHandler(sink, data)
-    }
-
-    this.sink = sink
-    this.id = sink.id
-    this.data = data
-}
-
-SinkEventHandler.prototype.handleEvent = handleEvent
-
-function handleEvent(ev) {
-    if (typeof this.sink === 'function') {
-        this.sink(this.data)
-    } else {
-        this.sink.write(this.data)
-    }
-}
-
-},{}],46:[function(require,module,exports){
-var FormData = require('form-data-set')
-var walk = require('dom-walk')
-
-module.exports = getFormData
-
-function buildElems(rootElem) {
-    var hash = {}
-
-    walk(rootElem, function (child) {
-        if (child.name) {
-            hash[child.name] = child
-        }
-    })
-
-
-    return hash
-}
-
-function getFormData(rootElem) {
-    var elements = buildElems(rootElem)
-
-    return FormData(elements)
-}
-
-},{"dom-walk":47,"form-data-set":48}],47:[function(require,module,exports){
-var slice = Array.prototype.slice
-
-module.exports = iterativelyWalk
-
-function iterativelyWalk(nodes, cb) {
-    if (!('length' in nodes)) {
-        nodes = [nodes]
-    }
-    
-    nodes = slice.call(nodes)
-
-    while(nodes.length) {
-        var node = nodes.shift(),
-            ret = cb(node)
-
-        if (ret) {
-            return ret
-        }
-
-        if (node.childNodes.length) {
-            nodes = slice.call(node.childNodes).concat(nodes)
+    for (var i = 0; i < children.length; i++) {
+        var childNode = render(children[i], opts)
+        if (childNode) {
+            node.appendChild(childNode)
         }
     }
+
+    return node
 }
 
-},{}],48:[function(require,module,exports){
-/*jshint maxcomplexity: 10*/
+function applyProperties(node, props) {
+    for (var propName in props) {
+        var propValue = props[propName]
 
-module.exports = FormData
-
-//TODO: Massive spec: http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#constructing-form-data-set
-function FormData(elements) {
-    return Object.keys(elements).reduce(function (acc, key) {
-        var elem = elements[key]
-
-        acc[key] = valueOfElement(elem)
-
-        return acc
-    }, {})
-}
-
-function valueOfElement(elem) {
-    if (typeof elem === "function") {
-        return elem()
-    } else if (containsRadio(elem)) {
-        var elems = toList(elem)
-        var checked = elems.filter(function (elem) {
-            return elem.checked
-        })[0] || null
-
-        return checked ? checked.value : null
-    } else if (Array.isArray(elem)) {
-        return elem.map(valueOfElement).filter(filterNull)
-    } else if (elem.tagName === undefined && elem.nodeType === undefined) {
-        return FormData(elem)
-    } else if (elem.tagName === "INPUT" && isChecked(elem)) {
-        if (elem.hasAttribute("value")) {
-            return elem.checked ? elem.value : null
+        if (typeof propValue === "function") {
+            propValue(node, propName)
+        } else if(propName === "style") {
+            if(typeof propValue === "string") {
+                node.style.cssText = propValue
+            } else {
+                for (var s in propValue) {
+                    node.style[s] = propValue[s]
+                }
+            }
+        } else if (propName.substr(0, 5) === "data-") {
+            DataSet(node)[propName.substr(5)] = propValue
         } else {
-            return elem.checked
+            node[propName] = propValue
         }
-    } else if (elem.tagName === "INPUT") {
-        return elem.value
-    } else if (elem.tagName === "TEXTAREA") {
-        return elem.value
-    } else if (elem.tagName === "SELECT") {
-        return elem.value
     }
 }
 
-function isChecked(elem) {
-    return elem.type === "checkbox" || elem.type === "radio"
-}
-
-function containsRadio(value) {
-    if (value.tagName || value.nodeType) {
-        return false
-    }
-
-    var elems = toList(value)
-
-    return elems.some(function (elem) {
-        return elem.tagName === "INPUT" && elem.type === "radio"
-    })
-}
-
-function toList(value) {
-    if (Array.isArray(value)) {
-        return value
-    }
-
-    return Object.keys(value).map(prop, value)
-}
-
-function prop(x) {
-    return this[x]
-}
-
-function filterNull(val) {
-    return val !== null
-}
-
-},{}],49:[function(require,module,exports){
-module.exports=require(23)
-},{}],50:[function(require,module,exports){
-module.exports=require(24)
-},{"./has-keys":49}],51:[function(require,module,exports){
-var extend = require('xtend')
-
-var getFormData = require('./lib/get-form-data.js')
-
-var ENTER = 13
-
-module.exports = SubmitSinkHandler
-
-function SubmitSinkHandler(sink, data) {
-    if (!(this instanceof SubmitSinkHandler)) {
-        return new SubmitSinkHandler(sink, data)
-    }
-
-    this.sink = sink
-    this.data = data
-    this.id = sink.id
-    this.type = 'submit'
-}
-
-SubmitSinkHandler.prototype.handleEvent = handleEvent
-
-function handleEvent(ev) {
-    var target = ev.target
-
-    var isValid =
-        (ev.type === 'click' && target.tagName === 'BUTTON') ||
-        (
-            (target.type === 'text' || target.tagName === 'TEXTAREA') &&
-            (ev.keyCode === ENTER && !ev.shiftKey && ev.type === 'keyup') &&
-            (target.value.trim() !== '')
-        )
-
-    if (!isValid) {
-        return
-    }
-
-    var value = getFormData(ev.currentTarget)
-    var data = extend(this.data, { currentValue: value })
-
-    if (typeof this.sink === 'function') {
-        this.sink(data)
-    } else {
-        this.sink.write(data)
-    }
-}
-
-},{"./lib/get-form-data.js":46,"xtend":50}],52:[function(require,module,exports){
-var extend = require('xtend')
-
-var getFormData = require('./lib/get-form-data.js')
-
-module.exports = ValueEventHandler
-
-function ValueEventHandler(sink, data) {
-    if (!(this instanceof ValueEventHandler)) {
-        return new ValueEventHandler(sink, data)
-    }
-
-    this.sink = sink
-    this.data = data
-    this.id = sink.id
-}
-
-ValueEventHandler.prototype.handleEvent = handleEvent
-
-function handleEvent(ev) {
-    var value = getFormData(ev.currentTarget)
-    var data = extend(this.data, { currentValue: value })
-
-    if (typeof this.sink === 'function') {
-        this.sink(data)
-    } else {
-        this.sink.write(data)
-    }
-}
-
-},{"./lib/get-form-data.js":46,"xtend":50}],53:[function(require,module,exports){
-var createElement = require("virtual-dom/render")
-var diff = require("virtual-dom/diff")
-var patch = require("virtual-dom/patch")
-
-module.exports = partial
-
-function partial(fn) {
-    var args = [].slice.call(arguments, 1)
-
-    return new Thunk(fn, args)
-}
-
-function Thunk(fn, args) {
-    this.fn = fn
-    this.args = args
-    this.vnode = null
-}
-
-Thunk.prototype.type = "immutable-thunk"
-Thunk.prototype.update = update
-Thunk.prototype.init = init
-
-function shouldUpdate(current, previous) {
-    return current.fn !== previous.fn ||
-        current.args.some(function (arg, index) {
-            return arg !== previous.args[index]
-        })
-}
-
-function update(previous, domNode) {
-    if (!shouldUpdate(this, previous)) {
-        this.vnode = previous.vnode
-        return
-    }
-
-    this.vnode = (this.vnode || this.fn.apply(null, this.args))
-    patch(domNode, diff(previous.vnode, this.vnode))
-}
-
-function init() {
-    this.vnode = this.fn.apply(null, this.args)
-    return createElement(this.vnode)
-}
-
-},{"virtual-dom/diff":54,"virtual-dom/patch":70,"virtual-dom/render":71}],54:[function(require,module,exports){
+},{"./lib/is-string":41,"./lib/is-virtual-dom":42,"./lib/is-virtual-text":43,"data-set":48}],38:[function(require,module,exports){
 var createPatch = require("./lib/patch-op")
 
 var isArray = require("./lib/is-array")
@@ -3294,7 +2775,7 @@ function appendPatch(apply, patch) {
     }
 }
 
-},{"./lib/is-array":56,"./lib/is-virtual-dom":58,"./lib/is-virtual-text":59,"./lib/is-widget":60,"./lib/patch-op":61}],55:[function(require,module,exports){
+},{"./lib/is-array":40,"./lib/is-virtual-dom":42,"./lib/is-virtual-text":43,"./lib/is-widget":44,"./lib/patch-op":45}],39:[function(require,module,exports){
 // Maps a virtual DOM tree onto a real DOM tree in an efficient manner.
 // We don't want to read all of the DOM nodes in the tree so we use
 // the in-order tree indexing to eliminate recursion down certain branches.
@@ -3381,7 +2862,7 @@ function ascending(a, b) {
     return a > b
 }
 
-},{}],56:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 var nativeIsArray = Array.isArray
 var toString = Object.prototype.toString
 
@@ -3391,7 +2872,7 @@ function isArray(obj) {
     return toString.call(obj) === "[object Array]"
 }
 
-},{}],57:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 var toString = Object.prototype.toString
 
 module.exports = isString
@@ -3400,7 +2881,7 @@ function isString(obj) {
     return toString.call(obj) === "[object String]"
 }
 
-},{}],58:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 var version = require("../version")
 var major = version[0]
 
@@ -3414,7 +2895,7 @@ function isVirtualDomNode(x) {
     return x.type === "VirtualDOMNode" && x.version[0] === major
 }
 
-},{"../version":72}],59:[function(require,module,exports){
+},{"../version":55}],43:[function(require,module,exports){
 var version = require("../version")
 var major = version[0]
 
@@ -3428,17 +2909,17 @@ function isVirtualTextNode(x) {
     return x.type === "VirtualTextNode" && x.version[0] === major
 }
 
-},{"../version":72}],60:[function(require,module,exports){
+},{"../version":55}],44:[function(require,module,exports){
 module.exports = isWidget
 
 function isWidget(w) {
     return w && typeof w.init === "function" && typeof w.update === "function"
 }
 
-},{}],61:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 var DataSet = require("data-set")
 
-var render = require("../render")
+var render = require("../create-element")
 var isWidget = require("./is-widget")
 var isString = require("./is-string")
 var isVNode = require("./is-virtual-dom")
@@ -3580,7 +3061,7 @@ function destroyWidget(domNode, w) {
     }
 }
 
-},{"../render":71,"./is-string":57,"./is-virtual-dom":58,"./is-widget":60,"./update-widget":62,"data-set":64}],62:[function(require,module,exports){
+},{"../create-element":37,"./is-string":41,"./is-virtual-dom":42,"./is-widget":44,"./update-widget":46,"data-set":48}],46:[function(require,module,exports){
 var isWidget = require("./is-widget")
 
 module.exports = updateWidget
@@ -3596,19 +3077,19 @@ function updateWidget(a, b) {
 
     return false
 }
-},{"./is-widget":60}],63:[function(require,module,exports){
-module.exports=require(16)
-},{}],64:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"./create-hash.js":63,"individual":65,"weakmap-shim/create-store":67}],65:[function(require,module,exports){
+},{"./is-widget":44}],47:[function(require,module,exports){
 module.exports=require(18)
-},{"global":66}],66:[function(require,module,exports){
-module.exports=require(19)
-},{}],67:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
+arguments[4][19][0].apply(exports,arguments)
+},{"./create-hash.js":47,"individual":49,"weakmap-shim/create-store":51}],49:[function(require,module,exports){
 module.exports=require(20)
-},{"./hidden-store.js":68}],68:[function(require,module,exports){
+},{"global":50}],50:[function(require,module,exports){
 module.exports=require(21)
-},{}],69:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
+module.exports=require(22)
+},{"./hidden-store.js":52}],52:[function(require,module,exports){
+module.exports=require(23)
+},{}],53:[function(require,module,exports){
 ;(function(exports) {
 
 // export the class if we are in a Node-like system.
@@ -4617,7 +4098,7 @@ if (typeof define === 'function' && define.amd)
   semver = {}
 );
 
-},{}],70:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 var domIndex = require("./lib/dom-index")
 var isArray = require("./lib/is-array")
 
@@ -4689,76 +4170,802 @@ function patchIndices(patches) {
     return indices
 }
 
-},{"./lib/dom-index":55,"./lib/is-array":56}],71:[function(require,module,exports){
-var DataSet = require("data-set")
-
-var isVirtualDomNode = require("./lib/is-virtual-dom")
-var isVirtualTextNode = require("./lib/is-virtual-text")
-var isString = require("./lib/is-string")
-
-module.exports = render
-
-function render(virtualDom, opts) {
-    var doc = opts ? opts.document || document : document
-    var warn = opts ? opts.warn : null
-
-    if (virtualDom && typeof virtualDom.init === "function") {
-        return virtualDom.init()
-    } else if (isVirtualTextNode(virtualDom)) {
-        return doc.createTextNode(virtualDom.text)
-    } else if (isString(virtualDom)) {
-        return doc.createTextNode(virtualDom)
-    } else if (!isVirtualDomNode(virtualDom)) {
-        if (warn) {
-            warn("Item is not a valid virtual dom node", virtualDom)
-        }
-        return null
-    }
-
-    var node = doc.createElement(virtualDom.tagName)
-    applyProperties(node, virtualDom.properties)
-    var children = virtualDom.children
-
-    for (var i = 0; i < children.length; i++) {
-        var childNode = render(children[i], opts)
-        if (childNode) {
-            node.appendChild(childNode)
-        }
-    }
-
-    return node
-}
-
-function applyProperties(node, props) {
-    for (var propName in props) {
-        var propValue = props[propName]
-
-        if (typeof propValue === "function") {
-            propValue(node, propName)
-        } else if(propName === "style") {
-            if(typeof propValue === "string") {
-                node.style.cssText = propValue
-            } else {
-                for (var s in propValue) {
-                    node.style[s] = propValue[s]
-                }
-            }
-        } else if (propName.substr(0, 5) === "data-") {
-            DataSet(node)[propName.substr(5)] = propValue
-        } else {
-            node[propName] = propValue
-        }
-    }
-}
-
-},{"./lib/is-string":57,"./lib/is-virtual-dom":58,"./lib/is-virtual-text":59,"data-set":64}],72:[function(require,module,exports){
+},{"./lib/dom-index":39,"./lib/is-array":40}],55:[function(require,module,exports){
 var semver = require("semver")
 
 module.exports = semver.clean("0.1.0")
 
-},{"semver":69}],73:[function(require,module,exports){
-arguments[4][54][0].apply(exports,arguments)
-},{"./lib/is-array":76,"./lib/is-virtual-dom":78,"./lib/is-virtual-text":79,"./lib/is-widget":80,"./lib/patch-op":82}],74:[function(require,module,exports){
+},{"semver":53}],56:[function(require,module,exports){
+module.exports = addListener
+
+function addListener(observArray, observ) {
+    var list = observArray._list
+
+    return observ(function (value) {
+        var valueList =  observArray().slice()
+        var index = list.indexOf(observ)
+
+        // This code path should never hit. If this happens
+        // there's a bug in the cleanup code
+        if (index === -1) {
+            var message = "observ-array: Unremoved observ listener"
+            var err = new Error(message)
+            err.list = list
+            err.index = index
+            err.observ = observ
+            throw err
+        }
+
+        valueList.splice(index, 1, value)
+        valueList._diff = [index, 1, value]
+
+        observArray.set(valueList)
+    })
+}
+
+},{}],57:[function(require,module,exports){
+var ObservArray = require("./index.js")
+
+var slice = Array.prototype.slice
+
+var ARRAY_METHODS = [
+    "concat", "slice", "every", "filter", "forEach", "indexOf",
+    "join", "lastIndexOf", "map", "reduce", "reduceRight",
+    "some", "toString", "toLocaleString"
+]
+
+var methods = ARRAY_METHODS.map(function (name) {
+    return [name, function () {
+        var res = this._list[name].apply(this._list, arguments)
+
+        if (res && Array.isArray(res)) {
+            res = ObservArray(res)
+        }
+
+        return res
+    }]
+})
+
+module.exports = ArrayMethods
+
+function ArrayMethods(obs) {
+    obs.push = observArrayPush
+    obs.pop = observArrayPop
+    obs.shift = observArrayShift
+    obs.unshift = observArrayUnshift
+    obs.reverse = notImplemented
+    obs.sort = notImplemented
+
+    methods.forEach(function (tuple) {
+        obs[tuple[0]] = tuple[1]
+    })
+    return obs
+}
+
+
+
+function observArrayPush() {
+    var args = slice.call(arguments)
+    args.unshift(this._list.length, 0)
+    this.splice.apply(this, args)
+
+    return this._list.length
+}
+function observArrayPop() {
+    return this.splice(this._list.length - 1, 1)[0]
+}
+function observArrayShift() {
+    return this.splice(0, 1)[0]
+}
+function observArrayUnshift() {
+    var args = slice.call(arguments)
+    args.unshift(0, 0)
+    this.splice.apply(this, args)
+
+    return this._list.length
+}
+
+
+function notImplemented() {
+    throw new Error("Pull request welcome")
+}
+
+},{"./index.js":58}],58:[function(require,module,exports){
+var Observ = require("observ")
+
+// circular dep between ArrayMethods & this file
+module.exports = ObservArray
+
+var splice = require("./splice.js")
+var ArrayMethods = require("./array-methods.js")
+var addListener = require("./add-listener.js")
+
+/*  ObservArray := (Array<T>) => Observ<
+        Array<T> & { _diff: Array }
+    > & {
+        splice: (index: Number, amount: Number, rest...: T) =>
+            Array<T>,
+        push: (values...: T) => Number,
+        filter: (lambda: Function, thisValue: Any) => Array<T>,
+        indexOf: (item: T, fromIndex: Number) => Number
+    }
+
+    Fix to make it more like ObservHash.
+
+    I.e. you write observables into it. 
+        reading methods take plain JS objects to read
+        and the value of the array is always an array of plain
+        objsect.
+
+        The observ array instance itself would have indexed 
+        properties that are the observables
+*/
+function ObservArray(initialList) {
+    // list is the internal mutable list observ instances that
+    // all methods on `obs` dispatch to.
+    var list = initialList
+    var initialState = []
+
+    // copy state out of initialList into initialState
+    list.forEach(function (observ, index) {
+        initialState[index] = typeof observ === "function" ?
+            observ() : observ
+    })
+
+    var obs = Observ(initialState)
+    obs.splice = splice
+
+    obs.get = get
+    obs.getLength = getLength
+
+    // you better not mutate this list directly
+    // this is the list of observs instances
+    obs._list = list
+
+    var removeListeners = list.map(function (observ) {
+        return typeof observ === "function" ?
+            addListener(obs, observ) :
+            null
+    });
+    // this is a list of removal functions that must be called
+    // when observ instances are removed from `obs.list`
+    // not calling this means we do not GC our observ change
+    // listeners. Which causes rage bugs
+    obs._removeListeners = removeListeners
+
+    return ArrayMethods(obs, list)
+}
+
+function get(index) {
+    return this._list[index]
+}
+
+function getLength() {
+    return this._list.length
+}
+
+},{"./add-listener.js":56,"./array-methods.js":57,"./splice.js":59,"observ":61}],59:[function(require,module,exports){
+var slice = Array.prototype.slice
+
+var addListener = require("./add-listener.js")
+
+module.exports = splice
+
+// `obs.splice` is a mutable implementation of `splice()`
+// that mutates both `list` and the internal `valueList` that
+// is the current value of `obs` itself
+function splice(index, amount) {
+    var obs = this
+    var args = slice.call(arguments, 0)
+    var valueList = obs().slice()
+
+    // generate a list of args to mutate the internal
+    // list of only obs
+    var valueArgs = args.map(function (value, index) {
+        if (index === 0 || index === 1) {
+            return value
+        }
+
+        // must unpack observables that we are adding
+        return typeof value === "function" ? value() : value
+    })
+
+    valueList.splice.apply(valueList, valueArgs)
+    // we remove the observs that we remove
+    var removed = obs._list.splice.apply(obs._list, args)
+
+    var extraRemoveListeners = args.slice(2).map(function (observ) {
+        return typeof observ === "function" ?
+            addListener(obs, observ) :
+            null
+    })
+    extraRemoveListeners.unshift(args[0], args[1])
+    var removedListeners = obs._removeListeners.splice
+        .apply(obs._removeListeners, extraRemoveListeners)
+
+    removedListeners.forEach(function (removeObservListener) {
+        if (removeObservListener) {
+            removeObservListener()
+        }
+    })
+
+    valueList._diff = valueArgs
+
+    obs.set(valueList)
+    return removed
+}
+
+},{"./add-listener.js":56}],60:[function(require,module,exports){
+var Observ = require("observ")
+var extend = require("xtend")
+
+/* ObservHash := (Object<String, Observ<T>>) => 
+    Object<String, Observ<T>> & Observ<Object<String, T>>
+
+*/
+module.exports = ObservHash
+
+function ObservHash(hash) {
+    var keys = Object.keys(hash)
+
+    var initialState = {}
+
+    keys.forEach(function (key) {
+        var observ = hash[key]
+        initialState[key] = typeof observ === "function" ?
+            observ() : observ
+    })
+
+    var obs = Observ(initialState)
+    keys.forEach(function (key) {
+        var observ = hash[key]
+        obs[key] = observ
+
+        if (typeof observ === "function") {
+            observ(function (value) {
+                var state = extend(obs())
+                state[key] = value
+                obs.set(state)
+            })
+        }
+    })
+
+    return obs
+}
+
+},{"observ":61,"xtend":117}],61:[function(require,module,exports){
+module.exports = Observable
+
+function Observable(value) {
+    var listeners = []
+    value = value === undefined ? null : value
+
+    observable.set = function (v) {
+        value = v
+        listeners.forEach(function (f) {
+            f(v)
+        })
+    }
+
+    return observable
+
+    function observable(listener) {
+        if (!listener) {
+            return value
+        }
+
+        listeners.push(listener)
+
+        return function remove() {
+            listeners.splice(listeners.indexOf(listener), 1)
+        }
+    }
+}
+
+},{}],62:[function(require,module,exports){
+var extend = require('xtend')
+
+var getFormData = require('./lib/get-form-data.js')
+
+module.exports = ChangeSinkHandler
+
+function ChangeSinkHandler(sink, data) {
+    if (!(this instanceof ChangeSinkHandler)) {
+        return new ChangeSinkHandler(sink, data)
+    }
+
+    this.sink = sink
+    this.data = data
+    this.type = 'change'
+    this.id = sink.id
+}
+
+ChangeSinkHandler.prototype.handleEvent = handleEvent
+
+function handleEvent(ev) {
+    var target = ev.target
+
+    var isValid =
+        (ev.type === 'change' && target.type === 'checkbox') ||
+        (ev.type === 'keyup' && target.type === 'text')
+
+    if (!isValid) {
+        return
+    }
+
+    var value = getFormData(ev.currentTarget)
+    var data = extend(this.data, { currentValue: value })
+
+    if (typeof this.sink === 'function') {
+        this.sink(data)
+    } else {
+        this.sink.write(data)
+    }
+}
+
+},{"./lib/get-form-data.js":64,"xtend":68}],63:[function(require,module,exports){
+module.exports = SinkEventHandler
+
+function SinkEventHandler(sink, data) {
+    if (!(this instanceof SinkEventHandler)) {
+        return new SinkEventHandler(sink, data)
+    }
+
+    this.sink = sink
+    this.id = sink.id
+    this.data = data
+}
+
+SinkEventHandler.prototype.handleEvent = handleEvent
+
+function handleEvent(ev) {
+    if (typeof this.sink === 'function') {
+        this.sink(this.data)
+    } else {
+        this.sink.write(this.data)
+    }
+}
+
+},{}],64:[function(require,module,exports){
+var FormData = require('form-data-set')
+var walk = require('dom-walk')
+
+module.exports = getFormData
+
+function buildElems(rootElem) {
+    var hash = {}
+
+    walk(rootElem, function (child) {
+        if (child.name) {
+            hash[child.name] = child
+        }
+    })
+
+
+    return hash
+}
+
+function getFormData(rootElem) {
+    var elements = buildElems(rootElem)
+
+    return FormData(elements)
+}
+
+},{"dom-walk":65,"form-data-set":66}],65:[function(require,module,exports){
+var slice = Array.prototype.slice
+
+module.exports = iterativelyWalk
+
+function iterativelyWalk(nodes, cb) {
+    if (!('length' in nodes)) {
+        nodes = [nodes]
+    }
+    
+    nodes = slice.call(nodes)
+
+    while(nodes.length) {
+        var node = nodes.shift(),
+            ret = cb(node)
+
+        if (ret) {
+            return ret
+        }
+
+        if (node.childNodes.length) {
+            nodes = slice.call(node.childNodes).concat(nodes)
+        }
+    }
+}
+
+},{}],66:[function(require,module,exports){
+/*jshint maxcomplexity: 10*/
+
+module.exports = FormData
+
+//TODO: Massive spec: http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#constructing-form-data-set
+function FormData(elements) {
+    return Object.keys(elements).reduce(function (acc, key) {
+        var elem = elements[key]
+
+        acc[key] = valueOfElement(elem)
+
+        return acc
+    }, {})
+}
+
+function valueOfElement(elem) {
+    if (typeof elem === "function") {
+        return elem()
+    } else if (containsRadio(elem)) {
+        var elems = toList(elem)
+        var checked = elems.filter(function (elem) {
+            return elem.checked
+        })[0] || null
+
+        return checked ? checked.value : null
+    } else if (Array.isArray(elem)) {
+        return elem.map(valueOfElement).filter(filterNull)
+    } else if (elem.tagName === undefined && elem.nodeType === undefined) {
+        return FormData(elem)
+    } else if (elem.tagName === "INPUT" && isChecked(elem)) {
+        if (elem.hasAttribute("value")) {
+            return elem.checked ? elem.value : null
+        } else {
+            return elem.checked
+        }
+    } else if (elem.tagName === "INPUT") {
+        return elem.value
+    } else if (elem.tagName === "TEXTAREA") {
+        return elem.value
+    } else if (elem.tagName === "SELECT") {
+        return elem.value
+    }
+}
+
+function isChecked(elem) {
+    return elem.type === "checkbox" || elem.type === "radio"
+}
+
+function containsRadio(value) {
+    if (value.tagName || value.nodeType) {
+        return false
+    }
+
+    var elems = toList(value)
+
+    return elems.some(function (elem) {
+        return elem.tagName === "INPUT" && elem.type === "radio"
+    })
+}
+
+function toList(value) {
+    if (Array.isArray(value)) {
+        return value
+    }
+
+    return Object.keys(value).map(prop, value)
+}
+
+function prop(x) {
+    return this[x]
+}
+
+function filterNull(val) {
+    return val !== null
+}
+
+},{}],67:[function(require,module,exports){
+module.exports=require(25)
+},{}],68:[function(require,module,exports){
+module.exports=require(26)
+},{"./has-keys":67}],69:[function(require,module,exports){
+var extend = require('xtend')
+
+var getFormData = require('./lib/get-form-data.js')
+
+var ENTER = 13
+
+module.exports = SubmitSinkHandler
+
+function SubmitSinkHandler(sink, data) {
+    if (!(this instanceof SubmitSinkHandler)) {
+        return new SubmitSinkHandler(sink, data)
+    }
+
+    this.sink = sink
+    this.data = data
+    this.id = sink.id
+    this.type = 'submit'
+}
+
+SubmitSinkHandler.prototype.handleEvent = handleEvent
+
+function handleEvent(ev) {
+    var target = ev.target
+
+    var isValid =
+        (ev.type === 'click' && target.tagName === 'BUTTON') ||
+        (
+            (target.type === 'text' || target.tagName === 'TEXTAREA') &&
+            (ev.keyCode === ENTER && !ev.shiftKey && ev.type === 'keyup') &&
+            (target.value.trim() !== '')
+        )
+
+    if (!isValid) {
+        return
+    }
+
+    var value = getFormData(ev.currentTarget)
+    var data = extend(this.data, { currentValue: value })
+
+    if (typeof this.sink === 'function') {
+        this.sink(data)
+    } else {
+        this.sink.write(data)
+    }
+}
+
+},{"./lib/get-form-data.js":64,"xtend":68}],70:[function(require,module,exports){
+var extend = require('xtend')
+
+var getFormData = require('./lib/get-form-data.js')
+
+module.exports = ValueEventHandler
+
+function ValueEventHandler(sink, data) {
+    if (!(this instanceof ValueEventHandler)) {
+        return new ValueEventHandler(sink, data)
+    }
+
+    this.sink = sink
+    this.data = data
+    this.id = sink.id
+}
+
+ValueEventHandler.prototype.handleEvent = handleEvent
+
+function handleEvent(ev) {
+    var value = getFormData(ev.currentTarget)
+    var data = extend(this.data, { currentValue: value })
+
+    if (typeof this.sink === 'function') {
+        this.sink(data)
+    } else {
+        this.sink.write(data)
+    }
+}
+
+},{"./lib/get-form-data.js":64,"xtend":68}],71:[function(require,module,exports){
+var createElement = require("virtual-dom/render")
+var diff = require("virtual-dom/diff")
+var patch = require("virtual-dom/patch")
+
+module.exports = partial
+
+function partial(fn) {
+    var args = [].slice.call(arguments, 1)
+
+    return new Thunk(fn, args)
+}
+
+function Thunk(fn, args) {
+    this.fn = fn
+    this.args = args
+    this.vnode = null
+}
+
+Thunk.prototype.type = "immutable-thunk"
+Thunk.prototype.update = update
+Thunk.prototype.init = init
+
+function shouldUpdate(current, previous) {
+    return current.fn !== previous.fn ||
+        current.args.some(function (arg, index) {
+            return arg !== previous.args[index]
+        })
+}
+
+function update(previous, domNode) {
+    if (!shouldUpdate(this, previous)) {
+        this.vnode = previous.vnode
+        return
+    }
+
+    this.vnode = (this.vnode || this.fn.apply(null, this.args))
+    patch(domNode, diff(previous.vnode, this.vnode))
+}
+
+function init() {
+    this.vnode = this.fn.apply(null, this.args)
+    return createElement(this.vnode)
+}
+
+},{"virtual-dom/diff":72,"virtual-dom/patch":88,"virtual-dom/render":89}],72:[function(require,module,exports){
+arguments[4][38][0].apply(exports,arguments)
+},{"./lib/is-array":74,"./lib/is-virtual-dom":76,"./lib/is-virtual-text":77,"./lib/is-widget":78,"./lib/patch-op":79}],73:[function(require,module,exports){
+module.exports=require(39)
+},{}],74:[function(require,module,exports){
+module.exports=require(40)
+},{}],75:[function(require,module,exports){
+module.exports=require(41)
+},{}],76:[function(require,module,exports){
+arguments[4][42][0].apply(exports,arguments)
+},{"../version":90}],77:[function(require,module,exports){
+arguments[4][43][0].apply(exports,arguments)
+},{"../version":90}],78:[function(require,module,exports){
+module.exports=require(44)
+},{}],79:[function(require,module,exports){
+var DataSet = require("data-set")
+
+var render = require("../render")
+var isWidget = require("./is-widget")
+var isString = require("./is-string")
+var isVNode = require("./is-virtual-dom")
+var updateWidget = require("./update-widget")
+
+module.exports = createPatch
+
+function createPatch(vNode, patch) {
+    return new PatchOp(vNode, patch)
+}
+
+function PatchOp(vNode, patch) {
+    this.vNode = vNode
+    this.patch = patch
+}
+
+PatchOp.prototype.apply = applyUpdate
+
+function applyUpdate(domNode, renderOptions) {
+    var vNode = this.vNode
+    var patch = this.patch
+
+    if (patch == null) {
+        return removeNode(domNode, vNode)
+    } else if (vNode == null) {
+        return insertNode(domNode, patch, renderOptions)
+    } else if (isString(patch)) {
+        return stringPatch(domNode, vNode, patch, renderOptions)
+    } else if (isWidget(patch)) {
+        return widgetPatch(domNode, vNode, patch, renderOptions)
+    } else if (isVNode(patch)) {
+        return vNodePatch(domNode, vNode, patch, renderOptions)
+    } else {
+        return propPatch(domNode, patch)
+    }
+}
+
+function removeNode(domNode, vNode) {
+    var parentNode = domNode.parentNode
+
+    if (parentNode) {
+        parentNode.removeChild(domNode)
+    }
+
+    destroyWidget(domNode, vNode);
+
+    return null
+}
+
+function insertNode(parentNode, vNode, renderOptions) {
+    var newNode = render(vNode, renderOptions)
+
+    if (parentNode) {
+        parentNode.appendChild(newNode)
+    }
+
+    return parentNode
+}
+
+function stringPatch(domNode, leftVNode, newString, renderOptions) {
+    if (domNode.nodeType === 3) {
+        domNode.replaceData(0, domNode.length, newString)
+        return domNode
+    }
+
+    var parentNode = domNode.parentNode
+    var newNode = render(newString, renderOptions)
+
+    if (parentNode) {
+        parentNode.replaceChild(newNode, domNode)
+    }
+
+    destroyWidget(domNode, leftVNode)
+
+    return newNode
+}
+
+function widgetPatch(domNode, leftVNode, widgetUpdate, renderOptions) {
+    if (isWidget(leftVNode)) {
+        if (updateWidget(leftVNode, widgetUpdate)) {
+            var updatedNode = widgetUpdate.update(leftVNode, domNode)
+            return updatedNode || domNode
+        }
+    }
+
+    var parentNode = domNode.parentNode
+    var newWidget = render(widgetUpdate, renderOptions)
+
+    if (parentNode) {
+        parentNode.replaceChild(newWidget, domNode)
+    }
+
+    destroyWidget(domNode, leftVNode)
+
+    return newWidget
+}
+
+function vNodePatch(domNode, leftVNode, rightVNode, renderOptions) {
+    var parentNode = domNode.parentNode
+    var newNode = render(rightVNode, renderOptions)
+
+    if (parentNode) {
+        parentNode.replaceChild(newNode, domNode)
+    }
+
+    destroyWidget(domNode, leftVNode)
+
+    return newNode
+}
+
+function propPatch(domNode, patch) {
+    for (var prop in patch) {
+        if (prop === "style") {
+            var stylePatch = patch.style
+            var domStyle = domNode.style
+            for (var s in stylePatch) {
+                domStyle[s] = stylePatch[s]
+            }
+        } else {
+            var patchValue = patch[prop]
+
+            if (typeof patchValue === "function") {
+                patchValue(domNode, prop)
+            } else if (prop.substr(0, 5) === "data-") {
+                DataSet(domNode)[prop.substr(5)] = patchValue
+            } else {
+                domNode[prop] = patchValue
+            }
+        }
+    }
+
+    return domNode
+}
+
+
+function destroyWidget(domNode, w) {
+    if (typeof w.destroy === "function" && isWidget(w)) {
+        w.destroy(domNode)
+    }
+}
+
+},{"../render":89,"./is-string":75,"./is-virtual-dom":76,"./is-widget":78,"./update-widget":80,"data-set":82}],80:[function(require,module,exports){
+module.exports=require(46)
+},{"./is-widget":78}],81:[function(require,module,exports){
+module.exports=require(18)
+},{}],82:[function(require,module,exports){
+arguments[4][19][0].apply(exports,arguments)
+},{"./create-hash.js":81,"individual":83,"weakmap-shim/create-store":85}],83:[function(require,module,exports){
+module.exports=require(20)
+},{"global":84}],84:[function(require,module,exports){
+module.exports=require(21)
+},{}],85:[function(require,module,exports){
+module.exports=require(22)
+},{"./hidden-store.js":86}],86:[function(require,module,exports){
+module.exports=require(23)
+},{}],87:[function(require,module,exports){
+module.exports=require(53)
+},{}],88:[function(require,module,exports){
+module.exports=require(54)
+},{"./lib/dom-index":73,"./lib/is-array":74}],89:[function(require,module,exports){
+arguments[4][37][0].apply(exports,arguments)
+},{"./lib/is-string":75,"./lib/is-virtual-dom":76,"./lib/is-virtual-text":77,"data-set":82}],90:[function(require,module,exports){
+module.exports=require(55)
+},{"semver":87}],91:[function(require,module,exports){
+arguments[4][37][0].apply(exports,arguments)
+},{"./lib/is-string":96,"./lib/is-virtual-dom":97,"./lib/is-virtual-text":98,"data-set":105}],92:[function(require,module,exports){
+arguments[4][38][0].apply(exports,arguments)
+},{"./lib/is-array":95,"./lib/is-virtual-dom":97,"./lib/is-virtual-text":98,"./lib/is-widget":99,"./lib/patch-op":101}],93:[function(require,module,exports){
 var extend = require("extend")
 
 var isArray = require("./lib/is-array")
@@ -4817,19 +5024,19 @@ function isChildren(x) {
     return isChild(x) || isArray(x) || isString(x)
 }
 
-},{"./lib/is-array":76,"./lib/is-string":77,"./lib/is-virtual-dom":78,"./lib/is-virtual-text":79,"./lib/parse-tag":81,"./virtual-dom-node.js":96,"./virtual-text-node.js":97,"extend":91}],75:[function(require,module,exports){
-module.exports=require(55)
-},{}],76:[function(require,module,exports){
-module.exports=require(56)
-},{}],77:[function(require,module,exports){
-module.exports=require(57)
-},{}],78:[function(require,module,exports){
-arguments[4][58][0].apply(exports,arguments)
-},{"../version":95}],79:[function(require,module,exports){
-arguments[4][59][0].apply(exports,arguments)
-},{"../version":95}],80:[function(require,module,exports){
-module.exports=require(60)
-},{}],81:[function(require,module,exports){
+},{"./lib/is-array":95,"./lib/is-string":96,"./lib/is-virtual-dom":97,"./lib/is-virtual-text":98,"./lib/parse-tag":100,"./virtual-dom-node.js":114,"./virtual-text-node.js":115,"extend":110}],94:[function(require,module,exports){
+module.exports=require(39)
+},{}],95:[function(require,module,exports){
+module.exports=require(40)
+},{}],96:[function(require,module,exports){
+module.exports=require(41)
+},{}],97:[function(require,module,exports){
+arguments[4][42][0].apply(exports,arguments)
+},{"../version":113}],98:[function(require,module,exports){
+arguments[4][43][0].apply(exports,arguments)
+},{"../version":113}],99:[function(require,module,exports){
+module.exports=require(44)
+},{}],100:[function(require,module,exports){
 var split = require("browser-split")
 
 var classIdSplit = /([\.#]?[a-zA-Z0-9_:-]+)/
@@ -4882,11 +5089,11 @@ function parseTag(tag, props) {
     return tagName ? tagName.toLowerCase() : "div"
 }
 
-},{"browser-split":84}],82:[function(require,module,exports){
-arguments[4][61][0].apply(exports,arguments)
-},{"../render":94,"./is-string":77,"./is-virtual-dom":78,"./is-widget":80,"./update-widget":83,"data-set":86}],83:[function(require,module,exports){
-module.exports=require(62)
-},{"./is-widget":80}],84:[function(require,module,exports){
+},{"browser-split":103}],101:[function(require,module,exports){
+arguments[4][45][0].apply(exports,arguments)
+},{"../create-element":91,"./is-string":96,"./is-virtual-dom":97,"./is-widget":99,"./update-widget":102,"data-set":105}],102:[function(require,module,exports){
+module.exports=require(46)
+},{"./is-widget":99}],103:[function(require,module,exports){
 /*!
  * Cross-Browser Split 1.1.1
  * Copyright 2007-2012 Steven Levithan <stevenlevithan.com>
@@ -4994,19 +5201,19 @@ module.exports = (function split(undef) {
   return self;
 })();
 
-},{}],85:[function(require,module,exports){
-module.exports=require(16)
-},{}],86:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"./create-hash.js":85,"individual":87,"weakmap-shim/create-store":89}],87:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 module.exports=require(18)
-},{"global":88}],88:[function(require,module,exports){
-module.exports=require(19)
-},{}],89:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
+arguments[4][19][0].apply(exports,arguments)
+},{"./create-hash.js":104,"individual":106,"weakmap-shim/create-store":108}],106:[function(require,module,exports){
 module.exports=require(20)
-},{"./hidden-store.js":90}],90:[function(require,module,exports){
+},{"global":107}],107:[function(require,module,exports){
 module.exports=require(21)
-},{}],91:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
+module.exports=require(22)
+},{"./hidden-store.js":109}],109:[function(require,module,exports){
+module.exports=require(23)
+},{}],110:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -5086,15 +5293,13 @@ module.exports = function extend() {
 	return target;
 };
 
-},{}],92:[function(require,module,exports){
-module.exports=require(69)
-},{}],93:[function(require,module,exports){
-module.exports=require(70)
-},{"./lib/dom-index":75,"./lib/is-array":76}],94:[function(require,module,exports){
-arguments[4][71][0].apply(exports,arguments)
-},{"./lib/is-string":77,"./lib/is-virtual-dom":78,"./lib/is-virtual-text":79,"data-set":86}],95:[function(require,module,exports){
-module.exports=require(72)
-},{"semver":92}],96:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
+module.exports=require(53)
+},{}],112:[function(require,module,exports){
+module.exports=require(54)
+},{"./lib/dom-index":94,"./lib/is-array":95}],113:[function(require,module,exports){
+module.exports=require(55)
+},{"semver":111}],114:[function(require,module,exports){
 var version = require("./version")
 var isVDOM = require("./lib/is-virtual-dom")
 var isWidget = require("./lib/is-widget")
@@ -5151,7 +5356,7 @@ function hasWidgets(children) {
     return false
 }
 
-},{"./lib/is-virtual-dom":78,"./lib/is-widget":80,"./version":95}],97:[function(require,module,exports){
+},{"./lib/is-virtual-dom":97,"./lib/is-widget":99,"./version":113}],115:[function(require,module,exports){
 var version = require("./version")
 
 module.exports = VirtualTextNode
@@ -5163,9 +5368,9 @@ function VirtualTextNode(text) {
 VirtualTextNode.prototype.version = version.split(".")
 VirtualTextNode.prototype.type = "VirtualTextNode"
 
-},{"./version":95}],98:[function(require,module,exports){
-module.exports=require(23)
-},{}],99:[function(require,module,exports){
+},{"./version":113}],116:[function(require,module,exports){
+module.exports=require(25)
+},{}],117:[function(require,module,exports){
 var Keys = require("object-keys")
 var hasKeys = require("./has-keys")
 
@@ -5192,7 +5397,7 @@ function extend() {
     return target
 }
 
-},{"./has-keys":98,"object-keys":101}],100:[function(require,module,exports){
+},{"./has-keys":116,"object-keys":119}],118:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -5234,11 +5439,11 @@ module.exports = function forEach(obj, fn) {
 };
 
 
-},{}],101:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 module.exports = Object.keys || require('./shim');
 
 
-},{"./shim":103}],102:[function(require,module,exports){
+},{"./shim":121}],120:[function(require,module,exports){
 var toString = Object.prototype.toString;
 
 module.exports = function isArguments(value) {
@@ -5256,7 +5461,7 @@ module.exports = function isArguments(value) {
 };
 
 
-},{}],103:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 (function () {
 	"use strict";
 
@@ -5320,8 +5525,8 @@ module.exports = function isArguments(value) {
 }());
 
 
-},{"./foreach":100,"./isArguments":102}],104:[function(require,module,exports){
-var mainloop = require("main-loop")
+},{"./foreach":118,"./isArguments":120}],122:[function(require,module,exports){
+var mercury = require("mercury")
 var document = require("global/document")
 
 var Input = require("./input.js")
@@ -5343,7 +5548,7 @@ function createApp() {
 
     wireUpEvents(state, input.events)
 
-    var loop = mainloop(state(), Render)
+    var loop = mercury.main(state(), Render)
 
     state(function (newState) {
         loop.update(newState)
@@ -5363,18 +5568,15 @@ function wireUpEvents(state, events) {
     events.setRoute(Update.setRoute.bind(null, state))
 }
 
-},{"./input.js":105,"./render.js":107,"./state.js":108,"./update.js":109,"global/document":29,"main-loop":35}],105:[function(require,module,exports){
-var Delegator = require("dom-delegator")
+},{"./input.js":123,"./render.js":125,"./state.js":126,"./update.js":127,"global/document":9,"mercury":11}],123:[function(require,module,exports){
 var window = require("global/window")
-var EventSource = require("geval/source")
-var HashRouter = require("hash-router")
-var EventSinks = require("event-sinks/geval")
+var mercury = require("mercury")
 
 module.exports = createInput
 
 function createInput() {
-    var del = Delegator()
-    var tuple = EventSinks(del.id, [
+    var del = mercury.Delegator()
+    var tuple = mercury.EventSinks(del.id, [
         "toggleAll", "add", "setTodoField", "toggle", "destroy",
         "startEdit", "finishEdit"
     ])
@@ -5385,15 +5587,15 @@ function createInput() {
 }
 
 function EventRouter() {
-    var router = HashRouter()
+    var router = mercury.HashRouter()
     window.addEventListener("hashchange", router)
 
-    return EventSource(function (emit) {
+    return mercury.Event(function (emit) {
         router.on("hash", emit)
     })
 }
 
-},{"dom-delegator":14,"event-sinks/geval":25,"geval/source":28,"global/window":30,"hash-router":31}],106:[function(require,module,exports){
+},{"global/window":10,"mercury":11}],124:[function(require,module,exports){
 var document = require("global/document")
 
 module.exports = doMutableFocus
@@ -5404,13 +5606,9 @@ function doMutableFocus(node, property) {
     }
 }
 
-},{"global/document":29}],107:[function(require,module,exports){
-var h = require("virtual-dom/h")
-var submitEvent = require("value-event/submit")
-var changeEvent = require("value-event/change")
-var valueEvent = require("value-event/value")
-var event = require("value-event/event")
-var partial = require("vdom-thunk")
+},{"global/document":9}],125:[function(require,module,exports){
+var mercury = require("mercury")
+var h = require("mercury").h
 
 var doMutableFocus = require("./lib/do-mutable-focus.js")
 
@@ -5421,9 +5619,9 @@ module.exports = render
 function render(state) {
     return h("#todoapp.todomvc-wrapper", [
         h("section.todoapp", [
-            partial(header, state.todoField, state.sinks),
-            partial(mainSection, state.todos, state.route, state.sinks),
-            partial(statsSection, state.todos, state.route)
+            mercury.partial(header, state.todoField, state.sinks),
+            mercury.partial(mainSection, state.todos, state.route, state.sinks),
+            mercury.partial(statsSection, state.todos, state.route)
         ]),
         footer
     ])
@@ -5432,8 +5630,8 @@ function render(state) {
 function header(todoField, sinks) {
     return h("header#header.header", {
         "data-event": [
-            changeEvent(sinks.setTodoField),
-            submitEvent(sinks.add)
+            mercury.changeEvent(sinks.setTodoField),
+            mercury.submitEvent(sinks.add)
         ]
     }, [
         h("h1", "Todos"),
@@ -5460,11 +5658,11 @@ function mainSection(todos, route, sinks) {
         h("input#toggle-all.toggle-all", {
             type: "checkbox",
             checked: allCompleted,
-            "data-change": event(sinks.toggleAll)
+            "data-change": mercury.event(sinks.toggleAll)
         }),
         h("label", { htmlFor: "toggle-all" }, "Mark all as complete"),
         h("ul#todo-list.todolist", visibleTodos.map(function (todo) {
-            return partial(todoItem, todo, sinks)
+            return mercury.partial(todoItem, todo, sinks)
         }))
     ])
 }
@@ -5478,16 +5676,16 @@ function todoItem(todo, sinks) {
             h("input.toggle", {
                 type: "checkbox",
                 checked: todo.completed,
-                "data-change": event(sinks.toggle, {
+                "data-change": mercury.event(sinks.toggle, {
                     id: todo.id,
                     completed: !todo.completed
                 })
             }),
             h("label", {
-                "data-dblclick": event(sinks.startEdit, { id: todo.id })
+                "data-dblclick": mercury.event(sinks.startEdit, { id: todo.id })
             }, todo.title),
             h("button.destroy", {
-                "data-click": event(sinks.destroy, { id: todo.id })
+                "data-click": mercury.event(sinks.destroy, { id: todo.id })
             })
         ]),
         h("input.edit", {
@@ -5497,8 +5695,8 @@ function todoItem(todo, sinks) {
             // custom mutable operation into the tree to be
             // invoked at patch time
             "data-focus": todo.editing ? doMutableFocus : null,
-            "data-event": submitEvent(sinks.finishEdit, { id: todo.id }),
-            "data-blur": valueEvent(sinks.finishEdit, { id: todo.id })
+            "data-event": mercury.submitEvent(sinks.finishEdit, { id: todo.id }),
+            "data-blur": mercury.valueEvent(sinks.finishEdit, { id: todo.id })
         })
     ])
 }
@@ -5542,12 +5740,10 @@ function infoFooter() {
     ])
 }
 
-},{"./lib/do-mutable-focus.js":106,"value-event/change":44,"value-event/event":45,"value-event/submit":51,"value-event/value":52,"vdom-thunk":53,"virtual-dom/h":74}],108:[function(require,module,exports){
+},{"./lib/do-mutable-focus.js":124,"mercury":11}],126:[function(require,module,exports){
 var cuid = require("cuid")
 var extend = require("xtend")
-var hash = require("observ-hash")
-var array = require("observ-array")
-var value = require("observ")
+var mercury = require("mercury")
 
 var TodoApp = {
     todos: [],
@@ -5570,10 +5766,10 @@ module.exports = {
 function todoApp(sinks, initialState) {
     var state = extend(TodoApp, initialState)
 
-    return hash({
-        todos: array(state.todos),
-        route: value(state.route),
-        todoField: value(state.todoField),
+    return mercury.hash({
+        todos: mercury.array(state.todos),
+        route: mercury.value(state.route),
+        todoField: mercury.value(state.todoField),
         sinks: sinks
     })
 }
@@ -5581,15 +5777,15 @@ function todoApp(sinks, initialState) {
 function todoItem(item) {
     var state = extend(TodoItem, item)
 
-    return hash({
+    return mercury.hash({
         id: cuid(),
-        title: value(state.title),
-        editing: value(state.editing),
-        completed: value(state.completed)
+        title: mercury.value(state.title),
+        editing: mercury.value(state.editing),
+        completed: mercury.value(state.completed)
     })
 }
 
-},{"cuid":9,"observ":1,"observ-array":39,"observ-hash":42,"xtend":99}],109:[function(require,module,exports){
+},{"cuid":8,"mercury":11,"xtend":117}],127:[function(require,module,exports){
 var State = require("./state.js")
 
 module.exports = {
@@ -5667,4 +5863,4 @@ function findIndex(list, id) {
     return null
 }
 
-},{"./state.js":108}]},{},[104])
+},{"./state.js":126}]},{},[122])

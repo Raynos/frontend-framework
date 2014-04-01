@@ -1,4 +1,4 @@
-var mainloop = require("main-loop")
+var mercury = require("mercury")
 var document = require("global/document")
 
 var Input = require("./input.js")
@@ -20,7 +20,7 @@ function createApp() {
 
     wireUpEvents(state, input.events)
 
-    var loop = mainloop(state(), Render)
+    var loop = mercury.main(state(), Render)
 
     state(function (newState) {
         loop.update(newState)

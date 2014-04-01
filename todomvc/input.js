@@ -1,14 +1,11 @@
-var Delegator = require("dom-delegator")
 var window = require("global/window")
-var EventSource = require("geval/source")
-var HashRouter = require("hash-router")
-var EventSinks = require("event-sinks/geval")
+var mercury = require("mercury")
 
 module.exports = createInput
 
 function createInput() {
-    var del = Delegator()
-    var tuple = EventSinks(del.id, [
+    var del = mercury.Delegator()
+    var tuple = mercury.EventSinks(del.id, [
         "toggleAll", "add", "setTodoField", "toggle", "destroy",
         "startEdit", "finishEdit"
     ])
@@ -19,10 +16,10 @@ function createInput() {
 }
 
 function EventRouter() {
-    var router = HashRouter()
+    var router = mercury.HashRouter()
     window.addEventListener("hashchange", router)
 
-    return EventSource(function (emit) {
+    return mercury.Event(function (emit) {
         router.on("hash", emit)
     })
 }

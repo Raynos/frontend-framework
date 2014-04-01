@@ -1,8 +1,6 @@
 var cuid = require("cuid")
 var extend = require("xtend")
-var hash = require("observ-hash")
-var array = require("observ-array")
-var value = require("observ")
+var mercury = require("mercury")
 
 var TodoApp = {
     todos: [],
@@ -25,10 +23,10 @@ module.exports = {
 function todoApp(sinks, initialState) {
     var state = extend(TodoApp, initialState)
 
-    return hash({
-        todos: array(state.todos),
-        route: value(state.route),
-        todoField: value(state.todoField),
+    return mercury.hash({
+        todos: mercury.array(state.todos),
+        route: mercury.value(state.route),
+        todoField: mercury.value(state.todoField),
         sinks: sinks
     })
 }
@@ -36,10 +34,10 @@ function todoApp(sinks, initialState) {
 function todoItem(item) {
     var state = extend(TodoItem, item)
 
-    return hash({
+    return mercury.hash({
         id: cuid(),
-        title: value(state.title),
-        editing: value(state.editing),
-        completed: value(state.completed)
+        title: mercury.value(state.title),
+        editing: mercury.value(state.editing),
+        completed: mercury.value(state.completed)
     })
 }

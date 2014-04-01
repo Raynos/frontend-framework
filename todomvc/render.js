@@ -1,9 +1,5 @@
-var h = require("virtual-dom/h")
-var submitEvent = require("value-event/submit")
-var changeEvent = require("value-event/change")
-var valueEvent = require("value-event/value")
-var event = require("value-event/event")
-var partial = require("vdom-thunk")
+var mercury = require("mercury")
+var h = require("mercury").h
 
 var doMutableFocus = require("./lib/do-mutable-focus.js")
 
@@ -14,9 +10,9 @@ module.exports = render
 function render(state) {
     return h("#todoapp.todomvc-wrapper", [
         h("section.todoapp", [
-            partial(header, state.todoField, state.sinks),
-            partial(mainSection, state.todos, state.route, state.sinks),
-            partial(statsSection, state.todos, state.route)
+            mercury.partial(header, state.todoField, state.sinks),
+            mercury.partial(mainSection, state.todos, state.route, state.sinks),
+            mercury.partial(statsSection, state.todos, state.route)
         ]),
         footer
     ])
@@ -25,8 +21,8 @@ function render(state) {
 function header(todoField, sinks) {
     return h("header#header.header", {
         "data-event": [
-            changeEvent(sinks.setTodoField),
-            submitEvent(sinks.add)
+            mercury.changeEvent(sinks.setTodoField),
+            mercury.submitEvent(sinks.add)
         ]
     }, [
         h("h1", "Todos"),
@@ -53,11 +49,11 @@ function mainSection(todos, route, sinks) {
         h("input#toggle-all.toggle-all", {
             type: "checkbox",
             checked: allCompleted,
-            "data-change": event(sinks.toggleAll)
+            "data-change": mercury.event(sinks.toggleAll)
         }),
         h("label", { htmlFor: "toggle-all" }, "Mark all as complete"),
         h("ul#todo-list.todolist", visibleTodos.map(function (todo) {
-            return partial(todoItem, todo, sinks)
+            return mercury.partial(todoItem, todo, sinks)
         }))
     ])
 }
@@ -71,16 +67,16 @@ function todoItem(todo, sinks) {
             h("input.toggle", {
                 type: "checkbox",
                 checked: todo.completed,
-                "data-change": event(sinks.toggle, {
+                "data-change": mercury.event(sinks.toggle, {
                     id: todo.id,
                     completed: !todo.completed
                 })
             }),
             h("label", {
-                "data-dblclick": event(sinks.startEdit, { id: todo.id })
+                "data-dblclick": mercury.event(sinks.startEdit, { id: todo.id })
             }, todo.title),
             h("button.destroy", {
-                "data-click": event(sinks.destroy, { id: todo.id })
+                "data-click": mercury.event(sinks.destroy, { id: todo.id })
             })
         ]),
         h("input.edit", {
@@ -90,8 +86,8 @@ function todoItem(todo, sinks) {
             // custom mutable operation into the tree to be
             // invoked at patch time
             "data-focus": todo.editing ? doMutableFocus : null,
-            "data-event": submitEvent(sinks.finishEdit, { id: todo.id }),
-            "data-blur": valueEvent(sinks.finishEdit, { id: todo.id })
+            "data-event": mercury.submitEvent(sinks.finishEdit, { id: todo.id }),
+            "data-blur": mercury.valueEvent(sinks.finishEdit, { id: todo.id })
         })
     ])
 }

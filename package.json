@@ -19,18 +19,9 @@
   "dependencies": {
     "browserify": "~3.33.0",
     "cuid": "^1.2.1",
-    "dom-delegator": "^6.2.1",
-    "event-sinks": "^2.0.1",
-    "geval": "~2.0.3",
     "global": "~2.0.7",
-    "hash-router": "~0.3.4",
-    "main-loop": "^1.0.1",
-    "observ-array": "~1.0.3",
-    "observ-hash": "~1.1.1",
+    "mercury": "^1.0.1",
     "serve-browserify": "~0.3.3",
-    "value-event": "^0.6.1",
-    "vdom-thunk": "^1.1.0",
-    "virtual-dom": "git://github.com/Raynos/virtual-dom#use-data-in-patch",
     "xtend": "~2.1.2"
   },
   "devDependencies": {
