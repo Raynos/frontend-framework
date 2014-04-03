@@ -1,4 +1,4 @@
-# frontend-framework
+# frontend-framework (DEPRECATED!)
 
 <!--
     [![build status][1]][2]
@@ -10,19 +10,15 @@
 
 <!-- [![browser support][11]][12] -->
 
-Building frontend apps with small modules
+# DEPRECATED
 
-## Teaser
+## [MERCURY](https://github.com/Raynos/mercury)
 
-Check out [mercury](https://github.com/Raynos/mercury)
+Use mercury instead.
 
 ## Installation
 
-`npm install frontend-framework`
-
-## Contributors
-
- - Raynos
+`npm install mercury`
 
 ## MIT Licenced
 
